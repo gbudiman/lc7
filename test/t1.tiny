@@ -1,0 +1,210 @@
+; *** __global
+; STORES "You will be asked for three float numbers\n" intro
+; STORES "Please enter the first float number: " first
+; STORES "Please enter the second float number: " second
+; STORES "Please enter the third float number: " third
+; STORES "\n" eol
+; STORES "*" star
+; STORES "+" plus
+; STORES "=" equal
+; *** add
+; Generating code for function add
+; LABEL add
+; LINK
+; ADDF $P0 $P1 $T0
+; STOREF $T0 $L0
+; STOREF $L0 $R
+; RET
+; *** multiply
+; Generating code for function multiply
+; LABEL multiply
+; LINK
+; MULTF $P0 $P1 $T1
+; STOREF $T1 $L0
+; STOREF $L0 $R
+; RET
+; *** main
+; Generating code for function main
+; LABEL main
+; LINK
+; WRITES intro
+; WRITES first
+; READF $L0
+; WRITES second
+; READF $L1
+; WRITES third
+; READF $L2
+; PUSH
+; PUSH $L0
+; PUSH $L1
+; JSR multiply
+; POP
+; POP
+; POP $T2
+; STOREF $T2 $L3
+; PUSH
+; PUSH $L3
+; PUSH $L2
+; JSR add
+; POP
+; POP
+; POP $T3
+; STOREF $T3 $L4
+; WRITEF $L0
+; WRITES star
+; WRITEF $L1
+; WRITES plus
+; WRITEF $L2
+; WRITES equal
+; WRITEF $L4
+; WRITES eol
+; STOREI 0 $T4
+; STOREI $T4 $R
+; RET
+str intro "You will be asked for three float numbers\n"
+str first "Please enter the first float number: "
+str second "Please enter the second float number: "
+str third "Please enter the third float number: "
+str eol "\n"
+str star "*"
+str plus "+"
+str equal "="
+push
+push r0
+push r1
+push r2
+push r3
+jsr main
+sys halt
+;Parsing: MAKESPACE 0
+;Parsing: MAKEPARAM 0
+;Parsing: MAKESPACE 1
+;Parsing: MAKEPARAM 2
+;Parsing: Generating code for function add
+;Parsing: LABEL add
+label add
+link 1
+;Parsing: LINK
+;Parsing: ADDF $P0 $P1 $T0
+move $7 r0
+addr $6 r0
+;Parsing: STOREF $T0 $L0
+move r0 $-1
+;Parsing: STOREF $L0 $R
+move $-1 r1
+move r1 $8
+;Parsing: RET
+unlnk
+ret
+;Parsing: MAKESPACE 1
+;Parsing: MAKEPARAM 2
+;Parsing: Generating code for function multiply
+;Parsing: LABEL multiply
+label multiply
+link 1
+;Parsing: LINK
+;Parsing: MULTF $P0 $P1 $T1
+move $7 r2
+mulr $6 r2
+;Parsing: STOREF $T1 $L0
+move r2 $-1
+;Parsing: STOREF $L0 $R
+move $-1 r3
+move r3 $8
+;Parsing: RET
+unlnk
+ret
+;Parsing: MAKESPACE 5
+;Parsing: MAKEPARAM 0
+;Parsing: Generating code for function main
+;Parsing: LABEL main
+label main
+link 5
+;Parsing: LINK
+;Parsing: WRITES intro
+sys writes intro
+;Parsing: WRITES first
+sys writes first
+;Parsing: READF $L0
+sys readr $-1
+;Parsing: WRITES second
+sys writes second
+;Parsing: READF $L1
+sys readr $-2
+;Parsing: WRITES third
+sys writes third
+;Parsing: READF $L2
+sys readr $-3
+;Parsing: PUSH
+push
+;Parsing: PUSH $L0
+push $-1
+;Parsing: PUSH $L1
+push $-2
+;Parsing: JSR multiply
+push r0
+push r1
+push r2
+push r3
+jsr multiply
+pop r3
+pop r2
+pop r1
+pop r0
+;Parsing: POP
+pop
+;Parsing: POP
+pop
+;Parsing: POP $T2
+pop r4
+;Parsing: STOREF $T2 $L3
+move r4 $-4
+;Parsing: PUSH
+push
+;Parsing: PUSH $L3
+push $-4
+;Parsing: PUSH $L2
+push $-3
+;Parsing: JSR add
+push r0
+push r1
+push r2
+push r3
+jsr add
+pop r3
+pop r2
+pop r1
+pop r0
+;Parsing: POP
+pop
+;Parsing: POP
+pop
+;Parsing: POP $T3
+pop r5
+;Parsing: STOREF $T3 $L4
+move r5 $-5
+;Parsing: WRITEF $L0
+sys writer $-1
+;Parsing: WRITES star
+sys writes star
+;Parsing: WRITEF $L1
+sys writer $-2
+;Parsing: WRITES plus
+sys writes plus
+;Parsing: WRITEF $L2
+sys writer $-3
+;Parsing: WRITES equal
+sys writes equal
+;Parsing: WRITEF $L4
+sys writer $-5
+;Parsing: WRITES eol
+sys writes eol
+;Parsing: STOREI 0 $T4
+move 0 r6
+;Parsing: STOREI $T4 $R
+move r6 r7
+move r7 $6
+;Parsing: RET
+unlnk
+ret
+end

@@ -1,0 +1,32 @@
+PROGRAM basic2 BEGIN
+	STRING s := "Program will begin\n";
+	FUNCTION INT add (INT a, INT b, INT c, INT d) BEGIN
+		INT result;
+		IF (c < d) THEN
+			result := a + b;
+		ELSE
+			result := a + b + c / d;
+		ENDIF
+		RETURN result;
+	END
+
+	FUNCTION INT mul (INT a, INT b, INT i) BEGIN
+		INT result;
+		result := 0;
+		DO
+			result := (result + a) * b;
+			i := i - 1;
+		WHILE (i > 0);
+		RETURN result;
+	END
+
+	FUNCTION VOID main() BEGIN
+		INT x,y,addr;
+		WRITE s;
+		x := 10;
+		y := 20;
+		addr := add(x,y);
+		WRITE(x,y,addr);
+		RETURN 0;
+	END
+END

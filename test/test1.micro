@@ -1,0 +1,45 @@
+PROGRAM test1 BEGIN
+	STRING l1 := "Function a returns: ";
+	STRING l2 := "Function b returns: ";
+	STRING minus := " - ";
+	STRING equal := " = ";
+	STRING eol := "\n";
+	INT d, e;
+	FUNCTION FLOAT a(FLOAT a, FLOAT b, FLOAT c, FLOAT d) BEGIN
+		FLOAT result;
+		IF (12 < d) THEN
+			WRITE(l1, a, eol);
+			RETURN a;
+		ELSE
+			WRITE(l1, b, eol);
+			RETURN b;
+		ENDIF
+	END
+
+	FUNCTION FLOAT b(FLOAT d, FLOAT e, FLOAT f) BEGIN
+		FLOAT result;
+		DO {
+			d := d + 1;
+			f := f - 1;
+		} WHILE (f > 0);
+		result := d - e;
+		WRITE(l2, d, minus, e, equal, result, eol);
+		RETURN d - e;
+	END
+
+	FUNCTION INT dxg(INT a, INT b) BEGIN
+		RETURN a - b;
+	END
+
+	FUNCTION VOID main() BEGIN
+		FLOAT u,v,w;
+		INT cx;
+		--u := 3 + 2;
+		w := a(5.0,3.8,7,8) * (b(3.8,4,5) - b(7,2.1,3.1));
+		d := 10;
+		e := 120;
+		cx := dxg(d, e);
+		WRITE(w, eol, d, e, eol, cx);
+		RETURN 0;
+	END
+END

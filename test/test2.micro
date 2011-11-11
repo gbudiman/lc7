@@ -1,0 +1,48 @@
+PROGRAM test2 BEGIN
+	-- Global
+	STRING l1 := "ifminus returns ";
+	STRING l2 := "ifdiv returns ";
+	STRING l3 := "dividing ";
+	STRING vc := "c";
+	STRING vm := "multiplier";
+	STRING plus := " + ";
+	STRING minus := " - ";
+	STRING divide := " / ";
+	STRING equal := " = ";
+	STRING space := " ";
+	STRING eol := "\n";
+	FLOAT multiplier;
+
+	FUNCTION FLOAT ifminus(FLOAT a, FLOAT b, FLOAT c) BEGIN
+		FLOAT result;
+		WRITE(vc, equal, c, space, vm, equal, multiplier, eol);
+		IF (c < multiplier) THEN
+			result := a - b;
+			WRITE(l1, a, minus, b, equal, result, eol);
+		ELSE
+			result := b - a;
+			WRITE(l1, b, minus, a, equal, result, eol);
+		ENDIF
+		RETURN result;
+	END
+
+	FUNCTION FLOAT ifdiv(FLOAT a, FLOAT b, INT c) BEGIN
+		DO 
+			WRITE(a, divide, b, plus, multiplier, equal);
+			a := a / b + multiplier;
+			WRITE(a, eol);
+			c := c - 1;
+			b := b / 2.0;
+		WHILE (c > 0);
+		WRITE(l2, equal, a, eol);
+		RETURN a;
+	END
+
+	FUNCTION VOID main() BEGIN
+		FLOAT minres, divres, finres;
+		multiplier := 9;
+		finres := ifminus(8, 7, 5) * ifdiv(18.0, 7.8, 8);
+		WRITE(finres);
+		RETURN 0;
+	END
+END

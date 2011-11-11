@@ -1,0 +1,18 @@
+#! /bin/bash
+#if [$1 != ""]
+#then
+	#for i in {1..18}
+	#do
+	#	echo $i "===============";
+	#	java -cp lib/antlr.jar:classes Micro test/"test"$i".micro";
+	#	more test/output/test"$i".parser;
+	#done
+#else
+	java -cp lib/antlr.jar:classes Micro test/$1".micro"
+	#more test/$1".micro"
+	#more test/test.out
+	#diff -b -B test/test.out test/"$1".table
+	#rm test/test.out
+#fi
+#echo "Input: ";
+#more test/input/"$1".micro;

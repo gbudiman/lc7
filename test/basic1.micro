@@ -1,0 +1,31 @@
+PROGRAM basic1 BEGIN
+	FLOAT x;
+	STRING k := "Hello";
+	FUNCTION VOID add() BEGIN
+		INT u,t;
+		u := 30;
+		t := u * 3;
+	END
+
+	FUNCTION VOID main() BEGIN
+		INT x,y;
+		x := 1;
+		y := x + 8;
+		WRITE(x,y);
+	END
+	
+	FUNCTION VOID min() BEGIN
+		INT mina, minb, x;
+		mina := 330;
+		x := 5;
+		IF (mina > 300) THEN
+			minb := 2;
+		ELSE
+			minb := 0;
+		ENDIF
+		DO
+			minb := minb + 1;
+			x := x - 1;
+		WHILE (x > 0);
+	END
+END

@@ -1,0 +1,205 @@
+; *** __global
+; STORES "Please enter an integer number: " input
+; STORES "\n" eol
+; *** factorial
+; Generating code for function factorial
+; LABEL factorial
+; LINK
+; STOREI 1 $T0
+; NE $P0 $T0 LABEL1
+; STOREI 1 $T1
+; STOREI $T1 $R
+; RET
+; JUMP LABEL0
+; LABEL LABEL1
+; STOREI 1 $T2
+; SUBI $P0 $T2 $T3
+; PUSH
+; PUSH $T3
+; JSR factorial
+; POP
+; POP $T4
+; STOREI $T4 $L1
+; MULTI $L1 $P0 $T5
+; STOREI $T5 $L0
+; LABEL LABEL0
+; STOREI $L0 $R
+; RET
+; *** main
+; Generating code for function main
+; LABEL main
+; LINK
+; WRITES input
+; READI $L0
+; STOREI 1 $T6
+; NE $L0 $T6 LABEL3
+; STOREI 1 $T7
+; STOREI $T7 $L1
+; JUMP LABEL2
+; LABEL LABEL3
+; STOREI 1 $T8
+; LEQ $L0 $T8 LABEL5
+; PUSH
+; PUSH $L0
+; JSR factorial
+; POP
+; POP $T9
+; STOREI $T9 $L1
+; JUMP LABEL4
+; LABEL LABEL5
+; STOREI 0 $T10
+; STOREI $T10 $L1
+; LABEL LABEL4
+; LABEL LABEL2
+; WRITEI $L1
+; WRITES eol
+; STOREI 0 $T11
+; STOREI $T11 $R
+; RET
+str input "Please enter an integer number: "
+str eol "\n"
+push
+push r0
+push r1
+push r2
+push r3
+jsr main
+sys halt
+;Parsing: MAKESPACE 0
+;Parsing: MAKEPARAM 0
+;Parsing: MAKESPACE 2
+;Parsing: MAKEPARAM 1
+;Parsing: Generating code for function factorial
+;Parsing: LABEL factorial
+label factorial
+link 2
+;Parsing: LINK
+;Parsing: STOREI 1 $T0
+move 1 r0
+;Parsing: NE $P0 $T0 LABEL1
+cmpi $6 r0
+jne LABEL1
+;Parsing: STOREI 1 $T1
+move 1 r1
+;Parsing: STOREI $T1 $R
+move r1 r2
+move r2 $7
+;Parsing: RET
+unlnk
+ret
+;Parsing: JUMP LABEL0
+jmp LABEL0
+;Parsing: LABEL LABEL1
+label LABEL1
+;Parsing: STOREI 1 $T2
+move 1 r3
+;Parsing: SUBI $P0 $T2 $T3
+move $6 r4
+subi r3 r4
+;Parsing: PUSH
+push
+;Parsing: PUSH $T3
+push r4
+;Parsing: JSR factorial
+push r0
+push r1
+push r2
+push r3
+jsr factorial
+pop r3
+pop r2
+pop r1
+pop r0
+;Parsing: POP
+pop
+;Parsing: POP $T4
+pop r5
+;Parsing: STOREI $T4 $L1
+move r5 $-1
+;Parsing: MULTI $L1 $P0 $T5
+move $-1 r6
+muli $6 r6
+;Parsing: STOREI $T5 $L0
+move r6 $-2
+;Parsing: LABEL LABEL0
+label LABEL0
+;Parsing: STOREI $L0 $R
+move $-2 r7
+move r7 $7
+;Parsing: RET
+unlnk
+ret
+;Parsing: MAKESPACE 2
+;Parsing: MAKEPARAM 0
+;Parsing: Generating code for function main
+;Parsing: LABEL main
+label main
+link 2
+;Parsing: LINK
+;Parsing: WRITES input
+sys writes input
+;Parsing: READI $L0
+sys readi $-1
+;Parsing: STOREI 1 $T6
+move 1 r8
+;Parsing: NE $L0 $T6 LABEL3
+cmpi $-1 r8
+jne LABEL3
+;Parsing: STOREI 1 $T7
+move 1 r9
+;Parsing: STOREI $T7 $L1
+move r9 $-2
+;Parsing: JUMP LABEL2
+jmp LABEL2
+;Parsing: LABEL LABEL3
+label LABEL3
+;Parsing: STOREI 1 $T8
+move 1 r10
+;Parsing: LEQ $L0 $T8 LABEL5
+cmpi $-1 r10
+jle LABEL5
+;Parsing: PUSH
+push
+;Parsing: PUSH $L0
+push $-1
+;Parsing: JSR factorial
+push r0
+push r1
+push r2
+push r3
+jsr factorial
+pop r3
+pop r2
+pop r1
+pop r0
+;Parsing: POP
+pop
+;Parsing: POP $T9
+pop r11
+;Parsing: STOREI $T9 $L1
+move r11 $-2
+;Parsing: JUMP LABEL4
+jmp LABEL4
+;Parsing: LABEL LABEL5
+label LABEL5
+;Parsing: STOREI 0 $T10
+move 0 r12
+;Parsing: STOREI $T10 $L1
+move r12 $-2
+;Parsing: LABEL LABEL4
+label LABEL4
+;Parsing: LABEL LABEL2
+label LABEL2
+;Parsing: WRITEI $L1
+sys writei $-2
+;Parsing: WRITES eol
+sys writes eol
+;Parsing: STOREI 0 $T11
+move 0 r13
+;Parsing: STOREI $T11 $R
+move r13 r14
+move r14 $6
+;Parsing: RET
+unlnk
+ret
+end
