@@ -59,6 +59,14 @@ class cfg {
 		}
 	}
 
+	public List<String> getIR() {
+		return instruction;
+	}
+
+	public List<String> getBB() {
+		return bbIndex;
+	}
+
 	public void process() {
 		identifyEdge();
 		identifyLeader();

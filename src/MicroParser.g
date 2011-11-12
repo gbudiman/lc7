@@ -163,16 +163,17 @@ program 	: 'PROGRAM' id 'BEGIN' {
 		}
 	}
 
-	a.init(masterTable);
-	List<String> tinyOutput = a.process(flatten(mirList), false);
-
-	//System.out.println("===================");
-	for (String x: tinyOutput) {
-		//System.out.println(x);
-	}
-
 	c.process();
 	c.printOut(1);
+	a.init(masterTable);
+	//List<String> tinyOutput = a.process(flatten(mirList), false);
+	List<String> tinyOutput = a.process(c.getIR(), false);
+
+	//System.out.println("===================");
+	/*for (String x: tinyOutput) {
+		System.out.println(x);
+	}*/
+
 
 };
 id		: IDENTIFIER;
