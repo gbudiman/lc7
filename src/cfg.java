@@ -22,7 +22,7 @@ class cfg {
 		isLeader.add(false);
 	}
 
-	public void printOut() {
+	public void printOut(int verbosity) {
 		for (int i = 0; i < instruction.size(); i++) {
 			// Basic Block index
 			System.out.print(";> ");
@@ -34,7 +34,7 @@ class cfg {
 			}
 
 			if (isLeader.get(i)) {
-				System.out.print(" Y ");
+				System.out.print("{LEADER} ");
 			}
 			else {
 		  		System.out.print("   ");
@@ -42,27 +42,33 @@ class cfg {
 
 			System.out.print(instruction.get(i));
 
-			//System.out.print(" | {PRED: ");
-			System.out.print("\n         | {PRED: ");
-			for (int j = 0; j < predecessor.get(i).size(); j++) {
-				System.out.print(predecessor.get(i).get(j) + "; ");
+			if (verbosity > 1) {
+				//System.out.print(" | {PRED: ");
+				System.out.print("\n         | {PRED: ");
+				for (int j = 0; j < predecessor.get(i).size(); j++) {
+					System.out.print(predecessor.get(i).get(j) + "; ");
+				}
+				//System.out.print("}{SUCC: ");
+				System.out.print("\n         | {SUCC: ");
+				for (int j = 0; j < successor.get(i).size(); j++) {
+					System.out.print(successor.get(i).get(j) + "; ");
+				}
+				System.out.print("}");
 			}
-			//System.out.print("}{SUCC: ");
-			System.out.print("\n         | {SUCC: ");
-			for (int j = 0; j < successor.get(i).size(); j++) {
-				System.out.print(successor.get(i).get(j) + "; ");
-			}
-			System.out.println("}");
+			System.out.println();
 		}
 	}
 
 	public void process() {
 		identifyEdge();
+		identifyLeader();
+		assignBBIndex();
 	}
 
 	public void identifyEdge() {
 		for (int i = 0; i < instruction.size(); i++) {
-			if (!isUnconditional(instruction.get(i))
+			if (!instruction.get(i).startsWith(";")
+				&& !isUnconditional(instruction.get(i))
 				&& !isBranch(instruction.get(i))
 				&& !isContextSwitch(instruction.get(i))) {
 				if (i < instruction.size() - 1) {
@@ -90,6 +96,40 @@ class cfg {
 				}
 			}
 		}
+	}
+
+	public void identifyLeader() {
+		for (int i = 0; i < instruction.size(); i++) {
+			if (instruction.get(i).startsWith(";")) continue;
+			if (pid.get(i).isEmpty()) {
+				isLeader.set(i, true);
+			}
+			else {
+				Vector<Integer> cPredecessor = pid.get(i);
+				Vector<Integer> cSuccessor = sid.get(i);
+				cPredecessor.remove((Object) (i-1));
+				cSuccessor.remove((Object) (i+1));
+
+				if (cPredecessor.size() != 0) {
+					isLeader.set(i, true);
+				}
+				if (cSuccessor.size() != 0) {
+					isLeader.set(i + 1, true);
+				}
+			}
+		}
+	}
+
+	public void assignBBIndex() {
+		int index = 0;
+		int i = 0;
+		for (i = 0; i < instruction.size() - 1; i++) {
+			bbIndex.set(i, index);
+			if (isLeader.get(i+1)) {
+				index++;
+			}
+		}
+		bbIndex.set(i, index);
 	}
 
 	public boolean isBranch(String _i) {

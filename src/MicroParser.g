@@ -172,7 +172,7 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	}
 
 	c.process();
-	c.printOut();
+	c.printOut(1);
 
 };
 id		: IDENTIFIER;
@@ -246,7 +246,7 @@ func_decl	: 'FUNCTION' any_type id
 		'(' param_decl_list? ')' 'BEGIN' func_body 'END' {
 	irTable.add(0, "LINK");
 	irTable.add(0, "LABEL " + $id.text);
-	irTable.add(0, "Generating code for function " + $id.text);
+	irTable.add(0, ";Generating code for function " + $id.text);
 	/*for (String c : $func_body.irs) {
 		System.out.println(";" + $id.text + " >> " + c);
 		//System.out.println(";" + c);
