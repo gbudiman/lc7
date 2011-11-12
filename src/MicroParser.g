@@ -154,10 +154,12 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	}*/
 	// End Symbol Table
 
+	cfg c = new cfg();
 	for (masterIR xmir : mirList) {
-		System.out.println("; *** " + xmir.scope);
+		//System.out.println("; *** " + xmir.scope);
 		for (String k : xmir.ir) {
-			System.out.println("; " + k);
+			//System.out.println("; " + k);
+			c.loadInstruction(k);
 		}
 	}
 
@@ -166,8 +168,11 @@ program 	: 'PROGRAM' id 'BEGIN' {
 
 	//System.out.println("===================");
 	for (String x: tinyOutput) {
-		System.out.println(x);
+		//System.out.println(x);
 	}
+
+	c.process();
+	c.printOut();
 
 };
 id		: IDENTIFIER;

@@ -45,5 +45,6 @@ public class Micro {
 		System.out.println("Line " + t.line + " char " + t.charPositionInLine);
 		//System.out.println("Not Accepted");
 	}
+
     }
 }
