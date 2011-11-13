@@ -170,6 +170,7 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	List<String> tinyOutput = a.process(c.getIR(), c.getBB(), false);
 
 	tinyAssembler fo = new tinyAssembler(tinyOutput, a.getBB());
+	fo.process();
 	fo.printOut(0);
 	//System.out.println("===================");
 	/*for (String x: tinyOutput) {
