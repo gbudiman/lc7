@@ -6,10 +6,13 @@ class tinyAssembler {
 	public Vector<Vector<String>> rxm;
 	public Vector<String> rUsed;
 	public Vector<Vector<Integer>> distantUse;
+	public Vector<tinyRegister> regAlloc;
+	private int registerSize;
 
 	public tinyAssembler(List<String> _tiny, List<Integer> _bbIndex) {
 		instruction = _tiny;
 		bbIndex = _bbIndex;
+		registerSize = 4;
 		if (instruction.size() != bbIndex.size()) {
 			System.out.println("WARNING: instruction : " 
 					+ instruction.size()
@@ -18,9 +21,11 @@ class tinyAssembler {
 		}
 		rxm = new Vector<Vector<String>>();
 		distantUse = new Vector<Vector<Integer>>();
+		regAlloc = new Vector<tinyRegister>();
 		for (int i = 0; i < instruction.size(); i++) {
 			rxm.add(new Vector<String>());
 			distantUse.add(new Vector<Integer>());
+			regAlloc.add(new tinyRegister(registerSize));
 		}
 	}
 
@@ -38,7 +43,9 @@ class tinyAssembler {
 				String[] ks = instruction.get(i).split("\\s");
 				if (instruction.get(i).startsWith("cmp")) {
 					if (ks[1].startsWith("r")) rUsed.add(ks[1]);
+					//if (rUsed.indexOf(ks[1]) == -1) rUsed.add(ks[1]);
 					if (ks[2].startsWith("r")) rUsed.add(ks[2]);
+					//if (rUsed.indexOf(ks[1]) == -1) rUsed.add(ks[2]);
 				}
 				else if (instruction.get(i).startsWith("add")
 					|| instruction.get(i).startsWith("sub")
@@ -46,10 +53,12 @@ class tinyAssembler {
 					|| instruction.get(i).startsWith("div")) {
 					if (ks[2].startsWith("r")) rUsed.remove(ks[2]);
 					if (ks[1].startsWith("r")) rUsed.add(ks[1]);
+					//if (rUsed.indexOf(ks[1]) == -1) rUsed.add(ks[1]);
 				}
 				else if (instruction.get(i).startsWith("move")) {
 					if (ks[2].startsWith("r")) rUsed.remove(ks[2]);
 					if (ks[1].startsWith("r")) rUsed.add(ks[1]);
+					//if (isInteger(ks[1]) && rUsed.indexOf(ks[1]) == -1) rUsed.add(ks[1]);
 				}
 				
 			}
@@ -61,18 +70,46 @@ class tinyAssembler {
 		}
 
 		preAllocate();
+		doAllocate();
+	}
+
+	public boolean isInteger(String _c) {
+		if (Character.isLetter(_c.charAt(0))) {
+			//System.out.println(_c + " -> false " + _c.charAt(0));
+			return true;
+		}
+		return false;
 	}
 
 	public void preAllocate() {
 		for (int i = 0; i < instruction.size(); i++) {
-			if (rxm.get(i).size() > 4) {
-				Vector<Integer> dul = new Vector<Integer>();	
-				for (int j = 0; j < rxm.get(i).size(); j++) {
-					
-					dul.add(getUseDistance(i, rxm.get(i).get(j).trim()));
-				}
-				distantUse.setElementAt(dul, i);
+			Vector<Integer> dul = new Vector<Integer>();	
+			for (int j = 0; j < rxm.get(i).size(); j++) {
+				
+				dul.add(getUseDistance(i, rxm.get(i).get(j).trim()));
 			}
+			distantUse.setElementAt(dul, i);
+		}
+	}
+
+	public void doAllocate() {
+		tinyRegister tempR = new tinyRegister(registerSize);
+		int indexLatch = -1;
+		for (int i = 0; i < instruction.size(); i++) {
+			if (i > 0) {
+				tempR = regAlloc.get(i-1);
+			}
+			if (indexLatch != bbIndex.get(i)) {
+				indexLatch = bbIndex.get(i);
+				tempR = new tinyRegister(registerSize);
+			}
+
+			String[] ks = instruction.get(i).split("\\s");
+			if (ks[0].startsWith("move")) {
+				if (ks[2].startsWith("r")) tempR.ensure(ks[2]);
+			}
+
+			regAlloc.setElementAt(tempR.clone(), i);
 		}
 	}
 
@@ -103,7 +140,7 @@ class tinyAssembler {
 		}
 		
 		if (found == -1) {
-			System.out.println(";WARNING! Future use of " + _target + " not found");
+			//System.out.println(";WARNING! Future use of " + _target + " not found");
 			return -1;
 		}
 		return iteration - startPoint;
@@ -111,9 +148,11 @@ class tinyAssembler {
 
 	public void printOut(int verbosity) {
 		int spacer = 20;
-		int analysisSpace = 32;
+		int analysisSpace = 24; 
+		int finalSpace = 20;
 		int whitespaceCount;
 		int registerCount;
+		int finalCount;
 		for (int i = 0; i < instruction.size(); i++) {
 			if (verbosity == 0 && instruction.get(i).startsWith(";")) {
 				continue;
@@ -124,12 +163,17 @@ class tinyAssembler {
 				System.out.print(" ");
 			}
 			registerCount = analysisSpace - rxm.get(i).toString().length();
-			System.out.print("; " + bbIndex.get(i) + " ");
+			System.out.print(";" + bbIndex.get(i) + " ");
 			System.out.print(rxm.get(i).toString());
 			for (int j = 0; j < registerCount; j++) {
 				System.out.print(" ");
 			}
 			System.out.print(distantUse.get(i).toString());
+			finalCount = finalSpace - distantUse.get(i).toString().length();
+			for (int j = 0; j < finalCount; j++) {
+				System.out.print(" ");
+			}
+			System.out.print(regAlloc.get(i).dataVector.toString());
 			System.out.println();
 		}
 	}

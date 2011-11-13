@@ -85,6 +85,9 @@ class assembler {
 		int currentBB;
 		int previousSize;
 		//List<String> strDeclaration = new LinkedList<String>();
+		if (irTable.size() != bbIndex.size()) {
+			System.out.println(";WARNING! irTable length: " + irTable.size() + " bbIndex length: " + bbIndex.size());
+		}
 		for (String ir : irTable) {
 			if (debug) { tinyTable.add("----- " + ir); }
 			currentBB = bbIndex.get(irIndex++);
@@ -94,7 +97,7 @@ class assembler {
 				//String[] mString = ir.split("\"");
 				//strDeclaration.add("str " + mString[2].trim() + " \"" + mString[1] + "\"");
 				i++;
-				irIndex++;
+				//irIndex++;
 				continue;
 			}
 			String[] tiny = ir.split("\\s");
