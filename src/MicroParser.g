@@ -167,8 +167,10 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	c.printOut(1);
 	a.init(masterTable);
 	//List<String> tinyOutput = a.process(flatten(mirList), false);
-	List<String> tinyOutput = a.process(c.getIR(), false);
+	List<String> tinyOutput = a.process(c.getIR(), c.getBB(), false);
 
+	tinyAssembler fo = new tinyAssembler(tinyOutput, a.getBB());
+	fo.printOut(0);
 	//System.out.println("===================");
 	/*for (String x: tinyOutput) {
 		System.out.println(x);

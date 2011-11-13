@@ -4,6 +4,7 @@ class assembler {
 	public List<String> tinyTable;
 	public List<String> varTable;
 	public List<String> localTable;
+	public List<Integer> assemblerBBIndex;
 	public String t1, t2, t3, t4;
 	private boolean use;
 	private int linkCount;
@@ -14,6 +15,7 @@ class assembler {
 		tinyTable = new Vector<String>();
 		varTable = new Vector<String>();
 		localTable = new Vector<String>();
+		assemblerBBIndex = new Vector<Integer>();
 		use = false;
 	}
 
@@ -28,6 +30,7 @@ class assembler {
 					tinyTable.add("var " + ese.getName());
 				}*/
 
+				int prefill = 0;
 				for (mSymbol sti: t.symbolTable) {
 					if (sti.getType().equals("STRING")) {
 						tinyTable.add("str " + sti.getName() + " " + sti.getValue());
@@ -35,6 +38,7 @@ class assembler {
 					else {
 						tinyTable.add("var " + sti.getName());
 					}
+					assemblerBBIndex.add(0);
 				}
 				tinyTable.add("push");
 				tinyTable.add("push r0");
@@ -44,6 +48,10 @@ class assembler {
 
 				tinyTable.add("jsr main");
 				tinyTable.add("sys halt");
+
+				for (int i = 0; i < 7; i++) {
+					assemblerBBIndex.add(0);
+				}
 			}
 			else { break; }
 		}
@@ -66,14 +74,27 @@ class assembler {
 		tinyTable.add("ret");
 	}
 
-	public List<String> process(List<String> irTable, boolean debug) {
+	public List<Integer> getBB() {
+		return assemblerBBIndex;
+	}
+
+	public List<String> process(List<String> irTable, List<Integer> bbIndex, boolean debug) {
 		int registerCounter = 0;
-		List<String> strDeclaration = new LinkedList<String>();
+		int i = 0;
+		int irIndex = 0;
+		int currentBB;
+		int previousSize;
+		//List<String> strDeclaration = new LinkedList<String>();
 		for (String ir : irTable) {
 			if (debug) { tinyTable.add("----- " + ir); }
+			currentBB = bbIndex.get(irIndex++);
+			previousSize = tinyTable.size();
+			//System.out.println(previousSize + " : " + ir);
 			if (ir.startsWith("STORES")) {
 				//String[] mString = ir.split("\"");
 				//strDeclaration.add("str " + mString[2].trim() + " \"" + mString[1] + "\"");
+				i++;
+				irIndex++;
 				continue;
 			}
 			String[] tiny = ir.split("\\s");
@@ -447,6 +468,11 @@ class assembler {
 					}
 				break;
 			}
+			i += tinyTable.size() - previousSize;
+			//System.out.println(previousSize + " -> " + tinyTable.size() + " (" + i + ")");
+			for (int j = previousSize; j < tinyTable.size(); j++) {
+				assemblerBBIndex.add(currentBB);
+			}
 		}
 		//fin();
 
@@ -454,6 +480,7 @@ class assembler {
 			tinyTable.addAll(0, strDeclaration);
 		}*/
 		tinyTable.add("end");
+		assemblerBBIndex.add(assemblerBBIndex.get(assemblerBBIndex.size() - 1));
 		return tinyTable;
 	}
 }

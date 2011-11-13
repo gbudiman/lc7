@@ -63,7 +63,7 @@ class cfg {
 		return instruction;
 	}
 
-	public List<String> getBB() {
+	public List<Integer> getBB() {
 		return bbIndex;
 	}
 
