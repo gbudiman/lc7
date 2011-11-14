@@ -7,6 +7,7 @@ class tinyAssembler {
 	public Vector<String> rUsed;
 	public Vector<Vector<Integer>> distantUse;
 	public Vector<tinyRegister> regAlloc;
+	public Vector<String> finalCode;
 	private int registerSize;
 
 	public tinyAssembler(List<String> _tiny, List<Integer> _bbIndex) {
@@ -42,22 +43,22 @@ class tinyAssembler {
 			if (!instruction.get(i).startsWith(";")) {
 				String[] ks = instruction.get(i).split("\\s");
 				if (instruction.get(i).startsWith("cmp")) {
-					if (ks[1].startsWith("r")) rUsed.add(ks[1]);
+					if (ks[1].startsWith("x")) rUsed.add(ks[1]);
 					//if (rUsed.indexOf(ks[1]) == -1) rUsed.add(ks[1]);
-					if (ks[2].startsWith("r")) rUsed.add(ks[2]);
+					if (ks[2].startsWith("x")) rUsed.add(ks[2]);
 					//if (rUsed.indexOf(ks[1]) == -1) rUsed.add(ks[2]);
 				}
 				else if (instruction.get(i).startsWith("add")
 					|| instruction.get(i).startsWith("sub")
 					|| instruction.get(i).startsWith("mul")
 					|| instruction.get(i).startsWith("div")) {
-					if (ks[2].startsWith("r")) rUsed.remove(ks[2]);
-					if (ks[1].startsWith("r")) rUsed.add(ks[1]);
+					if (ks[2].startsWith("x")) rUsed.remove(ks[2]);
+					if (ks[1].startsWith("x")) rUsed.add(ks[1]);
 					//if (rUsed.indexOf(ks[1]) == -1) rUsed.add(ks[1]);
 				}
 				else if (instruction.get(i).startsWith("move")) {
-					if (ks[2].startsWith("r")) rUsed.remove(ks[2]);
-					if (ks[1].startsWith("r")) rUsed.add(ks[1]);
+					if (ks[2].startsWith("x")) rUsed.remove(ks[2]);
+					if (ks[1].startsWith("x")) rUsed.add(ks[1]);
 					//if (isInteger(ks[1]) && rUsed.indexOf(ks[1]) == -1) rUsed.add(ks[1]);
 				}
 				
@@ -106,20 +107,20 @@ class tinyAssembler {
 
 			String[] ks = instruction.get(i).split("\\s");
 			if (ks[0].startsWith("move")) {
-				if (ks[1].startsWith("r")) tempR.free(ks[1], rxm.get(i + 1));
-				if (ks[2].startsWith("r")) tempR.ensure(ks[2]);
+				if (ks[1].startsWith("x")) tempR.free(ks[1], rxm.get(i + 1));
+				if (ks[2].startsWith("x")) tempR.ensure(ks[2]);
 			}
 			else if (ks[0].startsWith("cmp")) {
-				if (ks[1].startsWith("r")) {
+				if (ks[1].startsWith("x")) {
 					tempR.ensure(ks[1]);
 				}
-				if (ks[2].startsWith("r")) {
+				if (ks[2].startsWith("x")) {
 					tempR.ensure(ks[2]);
 				}
-				if (ks[1].startsWith("r")) {
+				if (ks[1].startsWith("x")) {
 					tempR.free(ks[1], rxm.get(i + 1));
 				}
-				if (ks[2].startsWith("r")) {
+				if (ks[2].startsWith("x")) {
 					tempR.free(ks[2], rxm.get(i + 1));
 				}
 			}
@@ -127,16 +128,16 @@ class tinyAssembler {
 				|| ks[0].startsWith("sub")		
 				|| ks[0].startsWith("mul")		
 				|| ks[0].startsWith("div")) {
-				if (ks[1].startsWith("r")) {
+				if (ks[1].startsWith("x")) {
 					tempR.ensure(ks[1]);
 				}
-				if (ks[2].startsWith("r")) {
+				if (ks[2].startsWith("x")) {
 					tempR.ensure(ks[2]);
 				}
-				if (ks[1].startsWith("r")) {
+				if (ks[1].startsWith("x")) {
 					tempR.free(ks[1], rxm.get(i + 1));
 				}
-				if (ks[2].startsWith("r")) {
+				if (ks[2].startsWith("x")) {
 					tempR.free(ks[2], rxm.get(i + 1));
 				}
 			}
@@ -205,8 +206,24 @@ class tinyAssembler {
 			for (int j = 0; j < finalCount; j++) {
 				System.out.print(" ");
 			}
-			System.out.print(regAlloc.get(i).dataVector.toString());
+			//System.out.print(regAlloc.get(i).dataVector.toString());
+			printRegister(i);
 			System.out.println();
+		}
+	}
+
+	public void printRegister(int _index) {
+		for (int j = 0; j < registerSize; j++) {
+			if (regAlloc.get(_index).dataVector.get(j) != null) {
+				System.out.print(regAlloc.get(_index).dataVector.get(j));
+			}
+			else {
+				System.out.print("_");
+			}
+			if (regAlloc.get(_index).boolVector.get(j)) {
+				System.out.print("*");
+			}
+			System.out.print(" ");
 		}
 	}
 }

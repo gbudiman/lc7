@@ -85,7 +85,9 @@ class tinyRegister {
 			}
 		}*/
 		if (liveVariable.indexOf(_freeTarget) == -1 && is_inRegister(_freeTarget)) {
-			dataVector.setElementAt(null, dataVector.indexOf(_freeTarget));
+			int removalTarget = dataVector.indexOf(_freeTarget);
+			dataVector.setElementAt(null, removalTarget);
+			boolVector.setElementAt(false, removalTarget);
 		}
 	}
 }
