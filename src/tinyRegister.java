@@ -85,7 +85,6 @@ class tinyRegister {
 			}
 		}*/
 		if (liveVariable.indexOf(_freeTarget) == -1 && is_inRegister(_freeTarget)) {
-			System.out.println("!removing!");
 			dataVector.setElementAt(null, dataVector.indexOf(_freeTarget));
 		}
 	}

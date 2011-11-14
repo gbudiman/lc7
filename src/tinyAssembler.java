@@ -106,7 +106,39 @@ class tinyAssembler {
 
 			String[] ks = instruction.get(i).split("\\s");
 			if (ks[0].startsWith("move")) {
+				if (ks[1].startsWith("r")) tempR.free(ks[1], rxm.get(i + 1));
 				if (ks[2].startsWith("r")) tempR.ensure(ks[2]);
+			}
+			else if (ks[0].startsWith("cmp")) {
+				if (ks[1].startsWith("r")) {
+					tempR.ensure(ks[1]);
+				}
+				if (ks[2].startsWith("r")) {
+					tempR.ensure(ks[2]);
+				}
+				if (ks[1].startsWith("r")) {
+					tempR.free(ks[1], rxm.get(i + 1));
+				}
+				if (ks[2].startsWith("r")) {
+					tempR.free(ks[2], rxm.get(i + 1));
+				}
+			}
+			else if (ks[0].startsWith("add")
+				|| ks[0].startsWith("sub")		
+				|| ks[0].startsWith("mul")		
+				|| ks[0].startsWith("div")) {
+				if (ks[1].startsWith("r")) {
+					tempR.ensure(ks[1]);
+				}
+				if (ks[2].startsWith("r")) {
+					tempR.ensure(ks[2]);
+				}
+				if (ks[1].startsWith("r")) {
+					tempR.free(ks[1], rxm.get(i + 1));
+				}
+				if (ks[2].startsWith("r")) {
+					tempR.free(ks[2], rxm.get(i + 1));
+				}
 			}
 
 			regAlloc.setElementAt(tempR.clone(), i);
