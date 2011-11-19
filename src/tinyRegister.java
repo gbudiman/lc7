@@ -35,6 +35,13 @@ class tinyRegister {
 		return false;
 	}
 
+	public String getRegisterLocation(String _s) {
+		if (is_inRegister(_s)) {
+			return "r" + findInRegister(_s);
+		}
+		return "gError";
+	}
+
 	public boolean is_dirty(String _t) {
 		int bvi;
 		if ((bvi = findInRegister(_t)) != -1) {
@@ -78,16 +85,11 @@ class tinyRegister {
 	}
 
 	public void free(String _freeTarget, Vector<String> liveVariable) {
-		/*for (int i = 0; i < dataVector.size(); i++) {
-			if (dataVector.get(i) != null && liveVariable.indexOf(dataVector.get(i)) == -1) {
-				System.out.print("Freeing " + dataVector.get(i) + " at " + liveVariable.toString() + " <- " + dataVector.toString());
-				dataVector.setElementAt(null, i);
-			}
-		}*/
 		if (liveVariable.indexOf(_freeTarget) == -1 && is_inRegister(_freeTarget)) {
 			int removalTarget = dataVector.indexOf(_freeTarget);
 			dataVector.setElementAt(null, removalTarget);
 			boolVector.setElementAt(false, removalTarget);
 		}
 	}
+
 }

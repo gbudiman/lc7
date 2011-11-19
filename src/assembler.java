@@ -101,7 +101,7 @@ class assembler {
 				continue;
 			}
 			String[] tiny = ir.split("\\s");
-			tinyTable.add(";Parsing: " + ir);
+			tinyTable.add(";" + ir);
 			switch(tiny.length) {
 				case 1:
 					if (tiny[0].equals("RET")) {

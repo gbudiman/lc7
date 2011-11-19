@@ -172,7 +172,6 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	for (int irw = 0; irw < tinyOutput.size(); irw++) {
 		String[] tto = tinyOutput.get(irw).split("\\s");
 		if (tto.length == 3) {
-			System.out.println("!DEBUG!");
 			if (tto[1].matches("^r[0-9]+")) tto[1] = tto[1].replace("r", "x");
 			if (tto[2].matches("^r[0-9]+")) tto[2] = tto[2].replace("r", "x");
 			tinyOutput.set(irw, (String) (tto[0] + " " + tto[1] + " " + tto[2]));
