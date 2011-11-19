@@ -201,6 +201,7 @@ class tinyAssembler {
 			if (verbosity == 0 && instruction.get(i).startsWith(";")) {
 				continue;
 			}
+			System.out.print(";");
 			whitespaceCount = spacer - instruction.get(i).length();
 			System.out.print(instruction.get(i));
 			for (int j = 0; j < whitespaceCount; j++) {
@@ -226,7 +227,7 @@ class tinyAssembler {
 
 	public void rewriteCode(String instruction, tinyRegister reg) {
 		String[] d = instruction.split("\\s");
-		System.out.print(";>> ");
+		System.out.print("    ");
 		if (d.length >= 2 && d[1].matches("x[0-9]+")) {
 			d[1] = reg.getRegisterLocation(d[1]);
 		}
