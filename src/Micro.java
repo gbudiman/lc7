@@ -30,7 +30,13 @@ public class Micro {
 	//try {
 	MicroParserLexer lex = new MicroParserLexer(new ANTLRFileStream(args[0]));
 	CommonTokenStream tokens = new CommonTokenStream(lex);
-	MicroParserParser parser = new MicroParserParser(tokens);
+	MicroParserParser parser;
+	if (args.length > 1) {
+		parser = new MicroParserParser(tokens, args[0], args[1]);
+	}
+	else {
+		parser = new MicroParserParser(tokens, args[0], null);
+	}
 
 	try {
 		parser.program();
@@ -48,3 +54,4 @@ public class Micro {
 
     }
 }
+

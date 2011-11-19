@@ -8,8 +8,12 @@
 	#	more test/output/test"$i".parser;
 	#done
 #else
+	echo "Live flag turned off =========================================================="
 	java -cp lib/antlr.jar:classes Micro test/$1".micro" > test/$1".tiny"
 	tinyR test/$1".tiny"
+	echo "Live flag turned on ==========================================================="
+	java -cp lib/antlr.jar:classes Micro test/$1".micro" -live > test/$1".tiny"
+	tiny test/$1".tiny"
 	#more test/$1".micro"
 	#more test/test.out
 	#diff -b -B test/test.out test/"$1".table

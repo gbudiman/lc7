@@ -14,6 +14,14 @@ grammar MicroParser;
 }
 @members {
 	private List<String> errors = new LinkedList<String>();
+
+	public String flag = null;
+	public MicroParserParser(TokenStream input, String _a0, String _a1) {
+		this(input, new RecognizerSharedState());
+		if (_a0.equals("-live")) flag = _a0;
+		if (_a1 != null && _a1.equals("-live")) flag = _a1;
+	}
+
 	public void displayRecognitionError(String[] tokenNames, RecognitionException e) {
 		String hdr = getErrorHeader(e);
 		String msg = getErrorMessage(e, tokenNames);
@@ -169,17 +177,24 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	//List<String> tinyOutput = a.process(flatten(mirList), false);
 	List<String> tinyOutput = a.process(c.getIR(), c.getBB(), false);
 
-	for (int irw = 0; irw < tinyOutput.size(); irw++) {
-		String[] tto = tinyOutput.get(irw).split("\\s");
-		if (tto.length == 3) {
-			if (tto[1].matches("^r[0-9]+")) tto[1] = tto[1].replace("r", "x");
-			if (tto[2].matches("^r[0-9]+")) tto[2] = tto[2].replace("r", "x");
-			tinyOutput.set(irw, (String) (tto[0] + " " + tto[1] + " " + tto[2]));
+	if (flag != null && flag.equals("-live")) {
+		for (int irw = 0; irw < tinyOutput.size(); irw++) {
+			String[] tto = tinyOutput.get(irw).split("\\s");
+			if (tto.length == 3) {
+				if (tto[1].matches("^r[0-9]+")) tto[1] = tto[1].replace("r", "x");
+				if (tto[2].matches("^r[0-9]+")) tto[2] = tto[2].replace("r", "x");
+				tinyOutput.set(irw, (String) (tto[0] + " " + tto[1] + " " + tto[2]));
+			}
+		}
+		tinyAssembler fo = new tinyAssembler(tinyOutput, a.getBB());
+		fo.process();
+		fo.printOut(0);
+	}
+	else {
+		for (String x: tinyOutput) {
+			System.out.println(x);
 		}
 	}
-	tinyAssembler fo = new tinyAssembler(tinyOutput, a.getBB());
-	fo.process();
-	fo.printOut(0);
 	//System.out.println("===================");
 	/*for (String x: tinyOutput) {
 		System.out.println(x);

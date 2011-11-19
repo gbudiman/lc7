@@ -9,6 +9,7 @@
 	#done
 #else
 	java -cp lib/antlr.jar:classes Micro test/$1".micro"
+	java -cp lib/antlr.jar:classes Micro test/$1".micro" -live
 	#more test/$1".micro"
 	#more test/test.out
 	#diff -b -B test/test.out test/"$1".table
