@@ -62,7 +62,7 @@ class tinyRegister {
 		return -1;
 	}
 
-	public String ensure(String _load, int startPoint, List<String> instruction, Map<String, String> spillRegister, Map<Integer, String> spillAction) {
+	public String ensure(String _load, int startPoint, List<String> instruction, Map<String, String> spillRegister, Map<Integer, String> spillAction, boolean dirty) {
 		if (is_inRegister(_load)) {
 			return null;
 		}

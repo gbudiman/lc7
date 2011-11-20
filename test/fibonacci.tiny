@@ -1,299 +1,351 @@
-; *** __global
-; STORES "Please input an integer number: " input
-; STORES "f>" fcl
-; STORES " " space
-; STORES "\n" eol
-; *** F
-; Generating code for function F
-; LABEL F
-; LINK
-; STOREI 2 $T0
-; LEQ $P0 $T0 LABEL1
-; STOREI 1 $T1
-; SUBI $P0 $T1 $T2
-; PUSH
-; PUSH $T2
-; JSR F
-; POP
-; POP $T3
-; STOREI $T3 $L0
-; STOREI 2 $T4
-; SUBI $P0 $T4 $T5
-; PUSH
-; PUSH $T5
-; JSR F
-; POP
-; POP $T6
-; STOREI $T6 $L1
-; ADDI $L0 $L1 $T7
-; STOREI $T7 $R
-; RET
-; JUMP LABEL0
-; LABEL LABEL1
-; STOREI 0 $T8
-; NE $P0 $T8 LABEL3
-; STOREI 0 $T9
-; STOREI $T9 $R
-; RET
-; JUMP LABEL2
-; LABEL LABEL3
-; STOREI 1 $T10
-; NE $P0 $T10 LABEL5
-; STOREI 1 $T11
-; STOREI $T11 $R
-; RET
-; JUMP LABEL4
-; LABEL LABEL5
-; STOREI 2 $T12
-; NE $P0 $T12 LABEL7
-; STOREI 1 $T13
-; STOREI $T13 $R
-; RET
-; LABEL LABEL7
-; LABEL LABEL6
-; LABEL LABEL4
-; LABEL LABEL2
-; LABEL LABEL0
-; *** main
-; Generating code for function main
-; LABEL main
-; LINK
-; STOREI 0 $T14
-; STOREI $T14 $L0
-; WRITES input
-; READI $L1
-; LABEL LABEL8
-; PUSH
-; PUSH $L0
-; JSR F
-; POP
-; POP $T15
-; STOREI $T15 $L2
-; WRITEI $L0
-; WRITES space
-; WRITEI $L2
-; WRITES eol
-; STOREI 1 $T16
-; ADDI $L0 $T16 $T17
-; STOREI $T17 $L0
-; GEQ $L0 $L1 LABEL10
-; JUMP LABEL8
-; LABEL LABEL10
-; STOREI 0 $T18
-; STOREI $T18 $R
-; RET
-str input "Please input an integer number: "
-str fcl "f>"
-str space " "
-str eol "\n"
-push
-push r0
-push r1
-push r2
-push r3
-jsr main
-sys halt
-;Parsing: MAKESPACE 0
-;Parsing: MAKEPARAM 0
-;Parsing: MAKESPACE 2
-;Parsing: MAKEPARAM 1
-;Parsing: Generating code for function F
-;Parsing: LABEL F
-label F
-link 2
-;Parsing: LINK
-;Parsing: STOREI 2 $T0
-move 2 r0
-;Parsing: LEQ $P0 $T0 LABEL1
-cmpi $6 r0
-jle LABEL1
-;Parsing: STOREI 1 $T1
-move 1 r1
-;Parsing: SUBI $P0 $T1 $T2
-move $6 r2
-subi r1 r2
-;Parsing: PUSH
-push
-;Parsing: PUSH $T2
-push r2
-;Parsing: JSR F
-push r0
-push r1
-push r2
-push r3
-jsr F
-pop r3
-pop r2
-pop r1
-pop r0
-;Parsing: POP
-pop
-;Parsing: POP $T3
-pop r3
-;Parsing: STOREI $T3 $L0
-move r3 $-1
-;Parsing: STOREI 2 $T4
-move 2 r4
-;Parsing: SUBI $P0 $T4 $T5
-move $6 r5
-subi r4 r5
-;Parsing: PUSH
-push
-;Parsing: PUSH $T5
-push r5
-;Parsing: JSR F
-push r0
-push r1
-push r2
-push r3
-jsr F
-pop r3
-pop r2
-pop r1
-pop r0
-;Parsing: POP
-pop
-;Parsing: POP $T6
-pop r6
-;Parsing: STOREI $T6 $L1
-move r6 $-2
-;Parsing: ADDI $L0 $L1 $T7
-move $-2 r8
-move $-1 r7
-addi $-2 r7
-;Parsing: STOREI $T7 $R
-move r7 r9
-move r9 $7
-;Parsing: RET
-unlnk
-ret
-;Parsing: JUMP LABEL0
-jmp LABEL0
-;Parsing: LABEL LABEL1
-label LABEL1
-;Parsing: STOREI 0 $T8
-move 0 r10
-;Parsing: NE $P0 $T8 LABEL3
-cmpi $6 r10
-jne LABEL3
-;Parsing: STOREI 0 $T9
-move 0 r11
-;Parsing: STOREI $T9 $R
-move r11 r12
-move r12 $7
-;Parsing: RET
-unlnk
-ret
-;Parsing: JUMP LABEL2
-jmp LABEL2
-;Parsing: LABEL LABEL3
-label LABEL3
-;Parsing: STOREI 1 $T10
-move 1 r13
-;Parsing: NE $P0 $T10 LABEL5
-cmpi $6 r13
-jne LABEL5
-;Parsing: STOREI 1 $T11
-move 1 r14
-;Parsing: STOREI $T11 $R
-move r14 r15
-move r15 $7
-;Parsing: RET
-unlnk
-ret
-;Parsing: JUMP LABEL4
-jmp LABEL4
-;Parsing: LABEL LABEL5
-label LABEL5
-;Parsing: STOREI 2 $T12
-move 2 r16
-;Parsing: NE $P0 $T12 LABEL7
-cmpi $6 r16
-jne LABEL7
-;Parsing: STOREI 1 $T13
-move 1 r17
-;Parsing: STOREI $T13 $R
-move r17 r18
-move r18 $7
-;Parsing: RET
-unlnk
-ret
-;Parsing: LABEL LABEL7
-label LABEL7
-;Parsing: LABEL LABEL6
-label LABEL6
-;Parsing: LABEL LABEL4
-label LABEL4
-;Parsing: LABEL LABEL2
-label LABEL2
-;Parsing: LABEL LABEL0
-label LABEL0
-;Parsing: MAKESPACE 3
-;Parsing: MAKEPARAM 0
-;Parsing: Generating code for function main
-;Parsing: LABEL main
-label main
-link 3
-;Parsing: LINK
-;Parsing: STOREI 0 $T14
-move 0 r19
-;Parsing: STOREI $T14 $L0
-move r19 $-1
-;Parsing: WRITES input
-sys writes input
-;Parsing: READI $L1
-sys readi $-2
-;Parsing: LABEL LABEL8
-label LABEL8
-;Parsing: PUSH
-push
-;Parsing: PUSH $L0
-push $-1
-;Parsing: JSR F
-push r0
-push r1
-push r2
-push r3
-jsr F
-pop r3
-pop r2
-pop r1
-pop r0
-;Parsing: POP
-pop
-;Parsing: POP $T15
-pop r20
-;Parsing: STOREI $T15 $L2
-move r20 $-3
-;Parsing: WRITEI $L0
-sys writei $-1
-;Parsing: WRITES space
-sys writes space
-;Parsing: WRITEI $L2
-sys writei $-3
-;Parsing: WRITES eol
-sys writes eol
-;Parsing: STOREI 1 $T16
-move 1 r21
-;Parsing: ADDI $L0 $T16 $T17
-move $-1 r22
-addi r21 r22
-;Parsing: STOREI $T17 $L0
-move r22 $-1
-;Parsing: GEQ $L0 $L1 LABEL10
-move $-2 r23
-cmpi $-1 r23
-jge LABEL10
-;Parsing: JUMP LABEL8
-jmp LABEL8
-;Parsing: LABEL LABEL10
-label LABEL10
-;Parsing: STOREI 0 $T18
-move 0 r24
-;Parsing: STOREI $T18 $R
-move r24 r25
-move r25 $6
-;Parsing: RET
-unlnk
-ret
-end
+;> 0  {LEADER} MAKESPACE 0
+;> 0     MAKEPARAM 0
+;> 0     STORES "Please input an integer number: " input
+;> 0     STORES "f>" fcl
+;> 0     STORES " " space
+;> 0     STORES "\n" eol
+;> 0     MAKESPACE 2
+;> 0     MAKEPARAM 1
+;> 0     ;Generating code for function F
+;> 1  {LEADER} LABEL F
+;> 1     LINK
+;> 1     STOREI 2 $T0
+;> 1     LEQ $P0 $T0 LABEL1
+;> 2  {LEADER} STOREI 1 $T1
+;> 2     SUBI $P0 $T1 $T2
+;> 2     PUSH
+;> 2     PUSH $T2
+;> 2     JSR F
+;> 3  {LEADER} POP
+;> 3     POP $T3
+;> 3     STOREI $T3 $L0
+;> 3     STOREI 2 $T4
+;> 3     SUBI $P0 $T4 $T5
+;> 3     PUSH
+;> 3     PUSH $T5
+;> 3     JSR F
+;> 4  {LEADER} POP
+;> 4     POP $T6
+;> 4     STOREI $T6 $L1
+;> 4     ADDI $L0 $L1 $T7
+;> 4     STOREI $T7 $R
+;> 4     RET
+;> 5  {LEADER} JUMP LABEL0
+;> 6  {LEADER} LABEL LABEL1
+;> 6     STOREI 0 $T8
+;> 6     NE $P0 $T8 LABEL3
+;> 7  {LEADER} STOREI 0 $T9
+;> 7     STOREI $T9 $R
+;> 7     RET
+;> 8  {LEADER} JUMP LABEL2
+;> 9  {LEADER} LABEL LABEL3
+;> 9     STOREI 1 $T10
+;> 9     NE $P0 $T10 LABEL5
+;> 10  {LEADER} STOREI 1 $T11
+;> 10     STOREI $T11 $R
+;> 10     RET
+;> 11  {LEADER} JUMP LABEL4
+;> 12  {LEADER} LABEL LABEL5
+;> 12     STOREI 2 $T12
+;> 12     NE $P0 $T12 LABEL7
+;> 13  {LEADER} STOREI 1 $T13
+;> 13     STOREI $T13 $R
+;> 13     RET
+;> 14  {LEADER} LABEL LABEL7
+;> 14     LABEL LABEL6
+;> 15  {LEADER} LABEL LABEL4
+;> 16  {LEADER} LABEL LABEL2
+;> 17  {LEADER} LABEL LABEL0
+;> 17     MAKESPACE 3
+;> 17     MAKEPARAM 0
+;> 17     ;Generating code for function main
+;> 18  {LEADER} LABEL main
+;> 18     LINK
+;> 18     STOREI 0 $T14
+;> 18     STOREI $T14 $L0
+;> 18     WRITES input
+;> 18     READI $L1
+;> 19  {LEADER} LABEL LABEL8
+;> 19     PUSH
+;> 19     PUSH $L0
+;> 19     JSR F
+;> 20  {LEADER} POP
+;> 20     POP $T15
+;> 20     STOREI $T15 $L2
+;> 20     WRITEI $L0
+;> 20     WRITES space
+;> 20     WRITEI $L2
+;> 20     WRITES eol
+;> 20     STOREI 1 $T16
+;> 20     ADDI $L0 $T16 $T17
+;> 20     STOREI $T17 $L0
+;> 20     GEQ $L0 $L1 LABEL10
+;> 21  {LEADER} JUMP LABEL8
+;> 22  {LEADER} LABEL LABEL10
+;> 22     STOREI 0 $T18
+;> 22     STOREI $T18 $R
+;> 22     RET
+;str input "Please input an integer number: ";0 []                      _ _ _ _ 
+    str input "Please input an integer number: "
+;str fcl "f>"        ;0 []                      _ _ _ _ 
+    str fcl "f>"
+;str space " "       ;0 []                      _ _ _ _ 
+    str space " "
+;str eol "\n"        ;0 []                      _ _ _ _ 
+    str eol "\n"
+;push                ;0 []                      _ _ _ _ 
+    push
+;push r0             ;0 []                      _ _ _ _ 
+    push r0
+;push r1             ;0 []                      _ _ _ _ 
+    push r1
+;push r2             ;0 []                      _ _ _ _ 
+    push r2
+;push r3             ;0 []                      _ _ _ _ 
+    push r3
+;jsr main            ;0 []                      _ _ _ _ 
+    jsr main
+;sys halt            ;0 []                      _ _ _ _ 
+    sys halt
+;label F             ;1 []                      _ _ _ _ 
+    label F
+;link 2              ;1 []                      _ _ _ _ 
+    link 2
+;move 2 x0           ;1 []                      x0* _ _ _ 
+    move 2 r0
+;cmpi $6 x0          ;1 [x0]                    x0* _ _ _ 
+    cmpi $6 r0
+;jle LABEL1          ;1 []                      _ _ _ _ 
+    jle LABEL1
+;move 1 x1           ;2 []                      x1* _ _ _ 
+    move 1 r0
+;move $6 x2          ;2 [x1]                    x1* x2* _ _ 
+    move $6 r1
+;subi x1 x2          ;2 [x1]                    x1* x2* _ _ 
+    subi r0 r1
+;push                ;2 []                      _ _ _ _ 
+    push
+;push r2             ;2 []                      _ _ _ _ 
+    push r2
+;push r0             ;2 []                      _ _ _ _ 
+    push r0
+;push r1             ;2 []                      _ _ _ _ 
+    push r1
+;push r2             ;2 []                      _ _ _ _ 
+    push r2
+;push r3             ;2 []                      _ _ _ _ 
+    push r3
+;jsr F               ;2 []                      _ _ _ _ 
+    jsr F
+;pop r3              ;2 []                      _ _ _ _ 
+    pop r3
+;pop r2              ;2 []                      _ _ _ _ 
+    pop r2
+;pop r1              ;2 []                      _ _ _ _ 
+    pop r1
+;pop r0              ;2 []                      _ _ _ _ 
+    pop r0
+;pop                 ;3 [x3]                    _ _ _ _ 
+    pop
+;pop r3              ;3 [x3]                    _ _ _ _ 
+    pop r3
+;move x3 $-1         ;3 [x3]                    _ _ _ _ 
+    move null $-1
+;move 2 x4           ;3 []                      x4* _ _ _ 
+    move 2 r0
+;move $6 x5          ;3 [x4]                    x4* x5* _ _ 
+    move $6 r1
+;subi x4 x5          ;3 [x4]                    x4* x5* _ _ 
+    subi r0 r1
+;push                ;3 [x5]                    _ _ _ _ 
+    push
+;push x5             ;3 [x5]                    _ x5* _ _ 
+    push r1
+;push r0             ;3 []                      _ _ _ _ 
+    push r0
+;push r1             ;3 []                      _ _ _ _ 
+    push r1
+;push r2             ;3 []                      _ _ _ _ 
+    push r2
+;push r3             ;3 []                      _ _ _ _ 
+    push r3
+;jsr F               ;3 []                      _ _ _ _ 
+    jsr F
+;pop r3              ;3 []                      _ _ _ _ 
+    pop r3
+;pop r2              ;3 []                      _ _ _ _ 
+    pop r2
+;pop r1              ;3 []                      _ _ _ _ 
+    pop r1
+;pop r0              ;3 []                      _ _ _ _ 
+    pop r0
+;pop                 ;4 [x6, x6]                _ _ _ _ 
+    pop
+;pop x6              ;4 [x6, x6]                x6* _ _ _ 
+    pop r0
+;move x6 $-2         ;4 [x6]                    x6* _ _ _ 
+    move r0 $-2
+;move $-2 x8         ;4 []                      x8* _ _ _ 
+    move $-2 r0
+;move $-1 x7         ;4 []                      x8* x7* _ _ 
+    move $-1 r1
+;addi $-2 x7         ;4 []                      x8* x7* _ _ 
+    addi $-2 r1
+;move x7 x9          ;4 [x7]                    x8* x7* x9* _ 
+    move r1 r2
+;move x9 $7          ;4 [x9]                    x8* _ x9* _ 
+    move r2 $7
+;unlnk               ;4 []                      _ _ _ _ 
+    unlnk
+;ret                 ;4 []                      _ _ _ _ 
+    ret
+;jmp LABEL0          ;5 []                      _ _ _ _ 
+    jmp LABEL0
+;label LABEL1        ;6 []                      _ _ _ _ 
+    label LABEL1
+;move 0 x10          ;6 []                      x10* _ _ _ 
+    move 0 r0
+;cmpi $6 x10         ;6 [x10]                   x10* _ _ _ 
+    cmpi $6 r0
+;jne LABEL3          ;6 []                      _ _ _ _ 
+    jne LABEL3
+;move 0 x11          ;7 []                      x11* _ _ _ 
+    move 0 r0
+;move x11 x12        ;7 [x11]                   x11* x12* _ _ 
+    move r0 r1
+;move x12 $7         ;7 [x12]                   _ x12* _ _ 
+    move r1 $7
+;unlnk               ;7 []                      _ _ _ _ 
+    unlnk
+;ret                 ;7 []                      _ _ _ _ 
+    ret
+;jmp LABEL2          ;8 []                      _ _ _ _ 
+    jmp LABEL2
+;label LABEL3        ;9 []                      _ _ _ _ 
+    label LABEL3
+;move 1 x13          ;9 []                      x13* _ _ _ 
+    move 1 r0
+;cmpi $6 x13         ;9 [x13]                   x13* _ _ _ 
+    cmpi $6 r0
+;jne LABEL5          ;9 []                      _ _ _ _ 
+    jne LABEL5
+;move 1 x14          ;10 []                      x14* _ _ _ 
+    move 1 r0
+;move x14 x15        ;10 [x14]                   x14* x15* _ _ 
+    move r0 r1
+;move x15 $7         ;10 [x15]                   _ x15* _ _ 
+    move r1 $7
+;unlnk               ;10 []                      _ _ _ _ 
+    unlnk
+;ret                 ;10 []                      _ _ _ _ 
+    ret
+;jmp LABEL4          ;11 []                      _ _ _ _ 
+    jmp LABEL4
+;label LABEL5        ;12 []                      _ _ _ _ 
+    label LABEL5
+;move 2 x16          ;12 []                      x16* _ _ _ 
+    move 2 r0
+;cmpi $6 x16         ;12 [x16]                   x16* _ _ _ 
+    cmpi $6 r0
+;jne LABEL7          ;12 []                      _ _ _ _ 
+    jne LABEL7
+;move 1 x17          ;13 []                      x17* _ _ _ 
+    move 1 r0
+;move x17 x18        ;13 [x17]                   x17* x18* _ _ 
+    move r0 r1
+;move x18 $7         ;13 [x18]                   _ x18* _ _ 
+    move r1 $7
+;unlnk               ;13 []                      _ _ _ _ 
+    unlnk
+;ret                 ;13 []                      _ _ _ _ 
+    ret
+;label LABEL7        ;14 []                      _ _ _ _ 
+    label LABEL7
+;label LABEL6        ;14 []                      _ _ _ _ 
+    label LABEL6
+;label LABEL4        ;15 []                      _ _ _ _ 
+    label LABEL4
+;label LABEL2        ;16 []                      _ _ _ _ 
+    label LABEL2
+;label LABEL0        ;17 []                      _ _ _ _ 
+    label LABEL0
+;label main          ;18 []                      _ _ _ _ 
+    label main
+;link 3              ;18 []                      _ _ _ _ 
+    link 3
+;move 0 x19          ;18 []                      x19* _ _ _ 
+    move 0 r0
+;move x19 $-1        ;18 [x19]                   x19* _ _ _ 
+    move r0 $-1
+;sys writes input    ;18 []                      _ _ _ _ 
+    sys writes input
+;sys readi $-2       ;18 []                      _ _ _ _ 
+    sys readi $-2
+;label LABEL8        ;19 []                      _ _ _ _ 
+    label LABEL8
+;push                ;19 []                      _ _ _ _ 
+    push
+;push $-1            ;19 []                      _ _ _ _ 
+    push $-1
+;push r0             ;19 []                      _ _ _ _ 
+    push r0
+;push r1             ;19 []                      _ _ _ _ 
+    push r1
+;push r2             ;19 []                      _ _ _ _ 
+    push r2
+;push r3             ;19 []                      _ _ _ _ 
+    push r3
+;jsr F               ;19 []                      _ _ _ _ 
+    jsr F
+;pop r3              ;19 []                      _ _ _ _ 
+    pop r3
+;pop r2              ;19 []                      _ _ _ _ 
+    pop r2
+;pop r1              ;19 []                      _ _ _ _ 
+    pop r1
+;pop r0              ;19 []                      _ _ _ _ 
+    pop r0
+;pop                 ;20 [x20, x20]              _ _ _ _ 
+    pop
+;pop x20             ;20 [x20, x20]              x20* _ _ _ 
+    pop r0
+;move x20 $-3        ;20 [x20]                   x20* _ _ _ 
+    move r0 $-3
+;sys writei $-1      ;20 []                      _ _ _ _ 
+    sys writei $-1
+;sys writes space    ;20 []                      _ _ _ _ 
+    sys writes space
+;sys writei $-3      ;20 []                      _ _ _ _ 
+    sys writei $-3
+;sys writes eol      ;20 []                      _ _ _ _ 
+    sys writes eol
+;move 1 x21          ;20 []                      x21* _ _ _ 
+    move 1 r0
+;move $-1 x22        ;20 [x21]                   x21* x22* _ _ 
+    move $-1 r1
+;addi x21 x22        ;20 [x21]                   x21* x22* _ _ 
+    addi r0 r1
+;move x22 $-1        ;20 [x22]                   _ x22* _ _ 
+    move r1 $-1
+;move $-2 x23        ;20 []                      x23* _ _ _ 
+    move $-2 r0
+;cmpi $-1 x23        ;20 [x23]                   x23* _ _ _ 
+    cmpi $-1 r0
+;jge LABEL10         ;20 []                      _ _ _ _ 
+    jge LABEL10
+;jmp LABEL8          ;21 []                      _ _ _ _ 
+    jmp LABEL8
+;label LABEL10       ;22 []                      _ _ _ _ 
+    label LABEL10
+;move 0 x24          ;22 []                      x24* _ _ _ 
+    move 0 r0
+;move x24 x25        ;22 [x24]                   x24* x25* _ _ 
+    move r0 r1
+;move x25 $6         ;22 [x25]                   _ x25* _ _ 
+    move r1 $6
+;unlnk               ;22 []                      _ _ _ _ 
+    unlnk
+;ret                 ;22 []                      _ _ _ _ 
+    ret
+;end                 ;22 []                      _ _ _ _ 
+    end
