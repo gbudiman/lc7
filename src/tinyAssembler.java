@@ -9,6 +9,7 @@ class tinyAssembler {
 	public Vector<tinyRegister> regAlloc;
 	public Vector<tinyRegister> debugRegAlloc;
 	public Map<String, String> spillRegister;
+	public Map<Integer, String> spillAction;
 	private int registerSize;
 
 	public tinyAssembler(List<String> _tiny, List<Integer> _bbIndex) {
@@ -32,6 +33,7 @@ class tinyAssembler {
 			debugRegAlloc.add(new tinyRegister(registerSize));
 		}
 		spillRegister = new HashMap<String, String>();
+		spillAction = new HashMap<Integer, String>();
 	}
 
 	public void process() {
@@ -111,17 +113,17 @@ class tinyAssembler {
 
 			String[] ks = instruction.get(i).split("\\s");
 			if (ks[0].startsWith("move")) {
-				if (ks[2].matches("x[0-9]+")) tempR.ensure(ks[2], i, instruction, spillRegister);
+				if (ks[2].matches("x[0-9]+")) tempR.ensure(ks[2], i, instruction, spillRegister, spillAction);
 				debugRegAlloc.setElementAt(tempR.clone(), i);
 				if (ks[1].matches("x[0-9]+")) tempR.free(ks[1], rxm.get(i + 1));
 				regAlloc.setElementAt(tempR.clone(), i);
 			}
 			else if (ks[0].startsWith("cmp")) {
 				if (ks[1].matches("x[0-9]+")) {
-					tempR.ensure(ks[1], i, instruction, spillRegister);
+					tempR.ensure(ks[1], i, instruction, spillRegister, spillAction);
 				}
 				if (ks[2].matches("x[0-9]+")) {
-					tempR.ensure(ks[2], i, instruction, spillRegister);
+					tempR.ensure(ks[2], i, instruction, spillRegister, spillAction);
 				}
 				debugRegAlloc.setElementAt(tempR.clone(), i);
 				if (ks[1].matches("x[0-9]+")) {
@@ -137,10 +139,10 @@ class tinyAssembler {
 				|| ks[0].startsWith("mul")		
 				|| ks[0].startsWith("div")) {
 				if (ks[1].matches("x[0-9]+")) {
-					tempR.ensure(ks[1], i, instruction, spillRegister);
+					tempR.ensure(ks[1], i, instruction, spillRegister, spillAction);
 				}
 				if (ks[2].matches("x[0-9]+")) {
-					tempR.ensure(ks[2], i, instruction, spillRegister);
+					tempR.ensure(ks[2], i, instruction, spillRegister, spillAction);
 				}
 				debugRegAlloc.setElementAt(tempR.clone(), i);
 				if (ks[1].matches("x[0-9]+")) {
@@ -199,6 +201,9 @@ class tinyAssembler {
 		int whitespaceCount;
 		int registerCount;
 		int finalCount;
+		for (String h: spillRegister.values()) {
+			System.out.println("    var " + h);
+		}
 		for (int i = 0; i < instruction.size(); i++) {
 			if (verbosity == 0 && instruction.get(i).startsWith(";")) {
 				continue;
@@ -223,6 +228,11 @@ class tinyAssembler {
 			//System.out.print(regAlloc.get(i).dataVector.toString());
 			printRegister(i);
 			System.out.println();
+			if (spillAction.get(i) != null) {
+				//System.out.println("   " + spillAction.get(i));
+				String[] d = spillAction.get(i).split("\\s");
+				System.out.println("    move " + d[1] + " " + d[2]);
+			}
 			rewriteCode(instruction.get(i), debugRegAlloc.get(i));
 		}
 	}
@@ -231,30 +241,25 @@ class tinyAssembler {
 		String[] d = instruction.split("\\s");
 		System.out.print("    ");
 		if (d.length >= 2 && d[1].matches("x[0-9]+")) {
-			//if (reg.getRegisterLocation(d[1]) != null) {
 				d[1] = reg.getRegisterLocation(d[1]);
-			//}
-			//else {
-				/// generate store
-				
-			//}
 		}
 		if (d.length == 3 && d[2].matches("x[0-9]+")) {
 			d[2] = reg.getRegisterLocation(d[2]);
 		}
 
 		if (d.length == 1) {
-			System.out.println(d[0]);
+			System.out.print(d[0]);
 		}
 		else if (d.length == 2) {
-			System.out.println(d[0] + " " + d[1]);
+			System.out.print(d[0] + " " + d[1]);
 		}
 		else if (d.length == 3) {
-			System.out.println(d[0] + " " + d[1] + " " + d[2]);
+			System.out.print(d[0] + " " + d[1] + " " + d[2]);
 		}
 		else {
-			System.out.println(";Can't rewrite code!");
+			System.out.print(";Can't rewrite code!");
 		}
+		System.out.println();
 	}
 
 	public void printRegister(int _index) {

@@ -62,16 +62,22 @@ class tinyRegister {
 		return -1;
 	}
 
-	public String ensure(String _load, int startPoint, List<String> instruction, Map<String, String> spillRegister) {
+	public String ensure(String _load, int startPoint, List<String> instruction, Map<String, String> spillRegister, Map<Integer, String> spillAction) {
 		if (is_inRegister(_load)) {
 			return null;
 		}
 		else if (findFree() != -1 && spillRegister.get(_load) != null) {
+			String r = "r" + findFree();
 			load(findFree(), _load);
-			return spillRegister.get(_load);
+			spillAction.put(startPoint, "load " + spillRegister.get(_load) + " " + r);
+			return null;
 		}
 		else {
-			return allocate(_load, startPoint, instruction, spillRegister);
+			String r = allocate(_load, startPoint, instruction, spillRegister);
+			if (r != null) {
+				spillAction.put(startPoint, "store " + r);
+			}
+			return null;
 		}
 	}
 
@@ -82,6 +88,7 @@ class tinyRegister {
 			return null;
 		}
 		else {
+			String r = "r";
 			String spillTarget;
 			int farthestUsedRegister = findFarthest(startPoint, instruction);
 			/*System.out.println(dataVector.get(farthestUsedRegister) 
@@ -90,8 +97,9 @@ class tinyRegister {
 											, (spillTarget = "spill_" + spillCounter++));
 			dataVector.setElementAt(null, farthestUsedRegister);
 			boolVector.setElementAt(false, farthestUsedRegister);
+			r += findFree();
 			load(findFree(), _load);
-			return spillTarget;
+			return r + " " + spillTarget;
 		}
 	}
 
