@@ -67,7 +67,14 @@ class tinyAssembler {
 					if (ks[1].matches("x[0-9]+")) rUsed.add(ks[1]);
 					//if (isInteger(ks[1]) && rUsed.indexOf(ks[1]) == -1) rUsed.add(ks[1]);
 				}
-				
+				else if (instruction.get(i).startsWith("pop") && ks.length == 2) {
+					if (Integer.parseInt(ks[1].substring(1)) >= registerSize) {
+						if (ks[1].matches("r[0-9]+")) {
+							//rUsed.add(ks[1].replace("r", "x"));
+							instruction.set(i, ks[0] + " " + ks[1].replace("r", "x"));
+						}
+					}
+				}
 			}
 			Vector<String> vd = new Vector<String>();
 			for (int ci = 0; ci < rUsed.size(); ci++) {
@@ -76,7 +83,6 @@ class tinyAssembler {
 			rxm.setElementAt(vd, i);
 		}
 
-		preAllocate();
 		doAllocate();
 	}
 
@@ -86,17 +92,6 @@ class tinyAssembler {
 			return true;
 		}
 		return false;
-	}
-
-	public void preAllocate() {
-		/*for (int i = 0; i < instruction.size(); i++) {
-			Vector<Integer> dul = new Vector<Integer>();	
-			for (int j = 0; j < rxm.get(i).size(); j++) {
-				
-				dul.add(getUseDistance(i, rxm.get(i).get(j).trim()));
-			}
-			distantUse.setElementAt(dul, i);
-		}*/
 	}
 
 	public void doAllocate() {
@@ -153,6 +148,14 @@ class tinyAssembler {
 				}
 				regAlloc.setElementAt(tempR.clone(), i);
 			}
+			else if (ks[0].startsWith("pop") && ks.length == 2) {
+				Integer rid = Integer.parseInt(ks[1].substring(1));
+				if (rid >= registerSize) {
+					tempR.ensure(ks[1], i, instruction, spillRegister, spillAction);
+					debugRegAlloc.setElementAt(tempR.clone(), i);
+					regAlloc.setElementAt(tempR.clone(), i);
+				}
+			}
 			else {
 				regAlloc.setElementAt(tempR.clone(), i);
 			}
@@ -161,7 +164,7 @@ class tinyAssembler {
 		}
 	}
 
-	public int getUseDistance(int startPoint, String _target) {
+	/*public int getUseDistance(int startPoint, String _target) {
 		int found = -1;
 		int iteration = startPoint + 1;
 		while (found == -1 && iteration < instruction.size()) {
@@ -192,7 +195,7 @@ class tinyAssembler {
 			return -1;
 		}
 		return iteration - startPoint;
-	}
+	}*/
 
 	public void printOut(int verbosity) {
 		int spacer = 20;
@@ -241,7 +244,7 @@ class tinyAssembler {
 		String[] d = instruction.split("\\s");
 		System.out.print("    ");
 		if (d.length >= 2 && d[1].matches("x[0-9]+")) {
-				d[1] = reg.getRegisterLocation(d[1]);
+			d[1] = reg.getRegisterLocation(d[1]);
 		}
 		if (d.length == 3 && d[2].matches("x[0-9]+")) {
 			d[2] = reg.getRegisterLocation(d[2]);
@@ -257,7 +260,7 @@ class tinyAssembler {
 			System.out.print(d[0] + " " + d[1] + " " + d[2]);
 		}
 		else {
-			System.out.print(";Can't rewrite code!");
+			System.out.print(instruction);
 		}
 		System.out.println();
 	}

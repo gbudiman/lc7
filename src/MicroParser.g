@@ -124,17 +124,6 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	masterTable.add(tms);
 	mirList.add(mir);
 
-	// IR table
-	//System.out.println("===================");
-	/*Iterator irti = irTable.iterator();
-	while (irti.hasNext()) {
-		System.out.println(";" + irti.next());
-	}*/
-
-	/*for (msTable tableEntry: masterTable) {
-		tableEntry.listMember();
-	}*/
-
 	// Symbol table
 	//System.out.println("===================");
 	/*Iterator mti = masterTable.iterator();
@@ -165,6 +154,8 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	cfg c = new cfg();
 	for (masterIR xmir : mirList) {
 		//System.out.println("; *** " + xmir.scope);
+		c.loadInstruction("MAKESPACE " + xmir.Space);
+		c.loadInstruction("MAKEPARAM " + xmir.parameter);
 		for (String k : xmir.ir) {
 			//System.out.println("; " + k);
 			c.loadInstruction(k);

@@ -1,44 +1,41 @@
-PROGRAM factorial2
+PROGRAM factorial
 BEGIN
-	STRING input := "Please enter an integer number: ";
+	STRING intro := "You will be asked for three float numbers\n";
+	STRING first := "Please enter the first float number: ";
+	STRING second := "Please enter the second float number: ";
+	STRING third := "Please enter the third float number: ";
 	STRING eol := "\n";
-	
-	--PROTO INT factorial (INT a);
-	--PROTO INT main  ();
-	
-	FUNCTION INT factorial(INT a)
+  STRING star := "*";
+	STRING plus := "+";
+	STRING equal := "=";
+		
+	FUNCTION FLOAT add (FLOAT a, FLOAT b)
 	BEGIN
-		INT ret;
-		INT tret;
-		IF (a = 1)
-		THEN
-			RETURN 1;
-		ELSE
-			tret := factorial(a-1);
-			ret := tret*a;
-		ENDIF
-		RETURN ret;
+	  FLOAT result;
+		result := a+b;
+		RETURN result;
 	END
 
+	FUNCTION FLOAT multiply (FLOAT a, FLOAT b)
+	BEGIN
+	  FLOAT result;
+		result := a*b;
+		RETURN result;
+	END
+	
 	FUNCTION INT main ()
 	BEGIN
-		INT num;
-		INT result;
-		WRITE(input);
-		READ(num);
-		
-		IF(num = 1)
-		THEN
-			result := 1;
-		ELSE
-			IF(num >1)
-			THEN
-			  result := factorial(num); 
-		  ELSE
-			  result := 0;
-			ENDIF
-		ENDIF
-		WRITE(result,eol);
+		FLOAT a,b,c;
+		FLOAT addresult,multiplyresult;
+		WRITE(intro,first);
+		READ(a);
+		WRITE(second);
+		READ(b);
+		WRITE(third);
+		READ(c);
+		addresult := multiply(a,b);
+		multiplyresult := add(addresult,c);
+		WRITE(a,star,b,plus,c,equal,multiplyresult,eol);
 		RETURN 0;
 	END
 END

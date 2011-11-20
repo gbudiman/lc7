@@ -1,205 +1,243 @@
-; *** __global
-; STORES "Please enter an integer number: " input
-; STORES "\n" eol
-; *** factorial
-; Generating code for function factorial
-; LABEL factorial
-; LINK
-; STOREI 1 $T0
-; NE $P0 $T0 LABEL1
-; STOREI 1 $T1
-; STOREI $T1 $R
-; RET
-; JUMP LABEL0
-; LABEL LABEL1
-; STOREI 1 $T2
-; SUBI $P0 $T2 $T3
-; PUSH
-; PUSH $T3
-; JSR factorial
-; POP
-; POP $T4
-; STOREI $T4 $L1
-; MULTI $L1 $P0 $T5
-; STOREI $T5 $L0
-; LABEL LABEL0
-; STOREI $L0 $R
-; RET
-; *** main
-; Generating code for function main
-; LABEL main
-; LINK
-; WRITES input
-; READI $L0
-; STOREI 1 $T6
-; NE $L0 $T6 LABEL3
-; STOREI 1 $T7
-; STOREI $T7 $L1
-; JUMP LABEL2
-; LABEL LABEL3
-; STOREI 1 $T8
-; LEQ $L0 $T8 LABEL5
-; PUSH
-; PUSH $L0
-; JSR factorial
-; POP
-; POP $T9
-; STOREI $T9 $L1
-; JUMP LABEL4
-; LABEL LABEL5
-; STOREI 0 $T10
-; STOREI $T10 $L1
-; LABEL LABEL4
-; LABEL LABEL2
-; WRITEI $L1
-; WRITES eol
-; STOREI 0 $T11
-; STOREI $T11 $R
-; RET
-str input "Please enter an integer number: "
-str eol "\n"
-push
-push r0
-push r1
-push r2
-push r3
-jsr main
-sys halt
-;Parsing: MAKESPACE 0
-;Parsing: MAKEPARAM 0
-;Parsing: MAKESPACE 2
-;Parsing: MAKEPARAM 1
-;Parsing: Generating code for function factorial
-;Parsing: LABEL factorial
-label factorial
-link 2
-;Parsing: LINK
-;Parsing: STOREI 1 $T0
-move 1 r0
-;Parsing: NE $P0 $T0 LABEL1
-cmpi $6 r0
-jne LABEL1
-;Parsing: STOREI 1 $T1
-move 1 r1
-;Parsing: STOREI $T1 $R
-move r1 r2
-move r2 $7
-;Parsing: RET
-unlnk
-ret
-;Parsing: JUMP LABEL0
-jmp LABEL0
-;Parsing: LABEL LABEL1
-label LABEL1
-;Parsing: STOREI 1 $T2
-move 1 r3
-;Parsing: SUBI $P0 $T2 $T3
-move $6 r4
-subi r3 r4
-;Parsing: PUSH
-push
-;Parsing: PUSH $T3
-push r4
-;Parsing: JSR factorial
-push r0
-push r1
-push r2
-push r3
-jsr factorial
-pop r3
-pop r2
-pop r1
-pop r0
-;Parsing: POP
-pop
-;Parsing: POP $T4
-pop r5
-;Parsing: STOREI $T4 $L1
-move r5 $-1
-;Parsing: MULTI $L1 $P0 $T5
-move $-1 r6
-muli $6 r6
-;Parsing: STOREI $T5 $L0
-move r6 $-2
-;Parsing: LABEL LABEL0
-label LABEL0
-;Parsing: STOREI $L0 $R
-move $-2 r7
-move r7 $7
-;Parsing: RET
-unlnk
-ret
-;Parsing: MAKESPACE 2
-;Parsing: MAKEPARAM 0
-;Parsing: Generating code for function main
-;Parsing: LABEL main
-label main
-link 2
-;Parsing: LINK
-;Parsing: WRITES input
-sys writes input
-;Parsing: READI $L0
-sys readi $-1
-;Parsing: STOREI 1 $T6
-move 1 r8
-;Parsing: NE $L0 $T6 LABEL3
-cmpi $-1 r8
-jne LABEL3
-;Parsing: STOREI 1 $T7
-move 1 r9
-;Parsing: STOREI $T7 $L1
-move r9 $-2
-;Parsing: JUMP LABEL2
-jmp LABEL2
-;Parsing: LABEL LABEL3
-label LABEL3
-;Parsing: STOREI 1 $T8
-move 1 r10
-;Parsing: LEQ $L0 $T8 LABEL5
-cmpi $-1 r10
-jle LABEL5
-;Parsing: PUSH
-push
-;Parsing: PUSH $L0
-push $-1
-;Parsing: JSR factorial
-push r0
-push r1
-push r2
-push r3
-jsr factorial
-pop r3
-pop r2
-pop r1
-pop r0
-;Parsing: POP
-pop
-;Parsing: POP $T9
-pop r11
-;Parsing: STOREI $T9 $L1
-move r11 $-2
-;Parsing: JUMP LABEL4
-jmp LABEL4
-;Parsing: LABEL LABEL5
-label LABEL5
-;Parsing: STOREI 0 $T10
-move 0 r12
-;Parsing: STOREI $T10 $L1
-move r12 $-2
-;Parsing: LABEL LABEL4
-label LABEL4
-;Parsing: LABEL LABEL2
-label LABEL2
-;Parsing: WRITEI $L1
-sys writei $-2
-;Parsing: WRITES eol
-sys writes eol
-;Parsing: STOREI 0 $T11
-move 0 r13
-;Parsing: STOREI $T11 $R
-move r13 r14
-move r14 $6
-;Parsing: RET
-unlnk
-ret
-end
+;> 0  {LEADER} MAKESPACE 0
+;> 0     MAKEPARAM 0
+;> 0     STORES "You will be asked for three float numbers\n" intro
+;> 0     STORES "Please enter the first float number: " first
+;> 0     STORES "Please enter the second float number: " second
+;> 0     STORES "Please enter the third float number: " third
+;> 0     STORES "\n" eol
+;> 0     STORES "*" star
+;> 0     STORES "+" plus
+;> 0     STORES "=" equal
+;> 0     MAKESPACE 1
+;> 0     MAKEPARAM 2
+;> 0     ;Generating code for function add
+;> 1  {LEADER} LABEL add
+;> 1     LINK
+;> 1     ADDF $P0 $P1 $T0
+;> 1     STOREF $T0 $L0
+;> 1     STOREF $L0 $R
+;> 1     RET
+;> 2  {LEADER} MAKESPACE 1
+;> 2     MAKEPARAM 2
+;> 2     ;Generating code for function multiply
+;> 3  {LEADER} LABEL multiply
+;> 3     LINK
+;> 3     MULTF $P0 $P1 $T1
+;> 3     STOREF $T1 $L0
+;> 3     STOREF $L0 $R
+;> 3     RET
+;> 4  {LEADER} MAKESPACE 5
+;> 4     MAKEPARAM 0
+;> 4     ;Generating code for function main
+;> 5  {LEADER} LABEL main
+;> 5     LINK
+;> 5     WRITES intro
+;> 5     WRITES first
+;> 5     READF $L0
+;> 5     WRITES second
+;> 5     READF $L1
+;> 5     WRITES third
+;> 5     READF $L2
+;> 5     PUSH
+;> 5     PUSH $L0
+;> 5     PUSH $L1
+;> 5     JSR multiply
+;> 6  {LEADER} POP
+;> 6     POP
+;> 6     POP $T2
+;> 6     STOREF $T2 $L3
+;> 6     PUSH
+;> 6     PUSH $L3
+;> 6     PUSH $L2
+;> 6     JSR add
+;> 7  {LEADER} POP
+;> 7     POP
+;> 7     POP $T3
+;> 7     STOREF $T3 $L4
+;> 7     WRITEF $L0
+;> 7     WRITES star
+;> 7     WRITEF $L1
+;> 7     WRITES plus
+;> 7     WRITEF $L2
+;> 7     WRITES equal
+;> 7     WRITEF $L4
+;> 7     WRITES eol
+;> 7     STOREI 0 $T4
+;> 7     STOREI $T4 $R
+;> 7     RET
+;str intro "You will be asked for three float numbers\n";0 []                      _ _ _ _ 
+    str intro "You will be asked for three float numbers\n"
+;str first "Please enter the first float number: ";0 []                      _ _ _ _ 
+    str first "Please enter the first float number: "
+;str second "Please enter the second float number: ";0 []                      _ _ _ _ 
+    str second "Please enter the second float number: "
+;str third "Please enter the third float number: ";0 []                      _ _ _ _ 
+    str third "Please enter the third float number: "
+;str eol "\n"        ;0 []                      _ _ _ _ 
+    str eol "\n"
+;str star "*"        ;0 []                      _ _ _ _ 
+    str star "*"
+;str plus "+"        ;0 []                      _ _ _ _ 
+    str plus "+"
+;str equal "="       ;0 []                      _ _ _ _ 
+    str equal "="
+;push                ;0 []                      _ _ _ _ 
+    push
+;push r0             ;0 []                      _ _ _ _ 
+    push r0
+;push r1             ;0 []                      _ _ _ _ 
+    push r1
+;push r2             ;0 []                      _ _ _ _ 
+    push r2
+;push r3             ;0 []                      _ _ _ _ 
+    push r3
+;jsr main            ;0 []                      _ _ _ _ 
+    jsr main
+;sys halt            ;0 []                      _ _ _ _ 
+    sys halt
+;label add           ;1 []                      _ _ _ _ 
+    label add
+;link 1              ;1 []                      _ _ _ _ 
+    link 1
+;move $7 x0          ;1 []                      x0* _ _ _ 
+    move $7 r0
+;addr $6 x0          ;1 []                      x0* _ _ _ 
+    addr $6 r0
+;move x0 $-1         ;1 [x0]                    x0* _ _ _ 
+    move r0 $-1
+;move $-1 x1         ;1 []                      x1* _ _ _ 
+    move $-1 r0
+;move x1 $8          ;1 [x1]                    x1* _ _ _ 
+    move r0 $8
+;unlnk               ;1 []                      _ _ _ _ 
+    unlnk
+;ret                 ;1 []                      _ _ _ _ 
+    ret
+;label multiply      ;3 []                      _ _ _ _ 
+    label multiply
+;link 1              ;3 []                      _ _ _ _ 
+    link 1
+;move $7 x2          ;3 []                      x2* _ _ _ 
+    move $7 r0
+;mulr $6 x2          ;3 []                      x2* _ _ _ 
+    mulr $6 r0
+;move x2 $-1         ;3 [x2]                    x2* _ _ _ 
+    move r0 $-1
+;move $-1 x3         ;3 []                      x3* _ _ _ 
+    move $-1 r0
+;move x3 $8          ;3 [x3]                    x3* _ _ _ 
+    move r0 $8
+;unlnk               ;3 []                      _ _ _ _ 
+    unlnk
+;ret                 ;3 []                      _ _ _ _ 
+    ret
+;label main          ;5 []                      _ _ _ _ 
+    label main
+;link 5              ;5 []                      _ _ _ _ 
+    link 5
+;sys writes intro    ;5 []                      _ _ _ _ 
+    sys writes intro
+;sys writes first    ;5 []                      _ _ _ _ 
+    sys writes first
+;sys readr $-1       ;5 []                      _ _ _ _ 
+    sys readr $-1
+;sys writes second   ;5 []                      _ _ _ _ 
+    sys writes second
+;sys readr $-2       ;5 []                      _ _ _ _ 
+    sys readr $-2
+;sys writes third    ;5 []                      _ _ _ _ 
+    sys writes third
+;sys readr $-3       ;5 []                      _ _ _ _ 
+    sys readr $-3
+;push                ;5 []                      _ _ _ _ 
+    push
+;push $-1            ;5 []                      _ _ _ _ 
+    push $-1
+;push $-2            ;5 []                      _ _ _ _ 
+    push $-2
+;push r0             ;5 []                      _ _ _ _ 
+    push r0
+;push r1             ;5 []                      _ _ _ _ 
+    push r1
+;push r2             ;5 []                      _ _ _ _ 
+    push r2
+;push r3             ;5 []                      _ _ _ _ 
+    push r3
+;jsr multiply        ;5 []                      _ _ _ _ 
+    jsr multiply
+;pop r3              ;5 []                      _ _ _ _ 
+    pop r3
+;pop r2              ;5 []                      _ _ _ _ 
+    pop r2
+;pop r1              ;5 []                      _ _ _ _ 
+    pop r1
+;pop r0              ;5 []                      _ _ _ _ 
+    pop r0
+;pop                 ;6 [x4]                    _ _ _ _ 
+    pop
+;pop                 ;6 [x4]                    _ _ _ _ 
+    pop
+;pop x4              ;6 [x4]                    x4* _ _ _ 
+    pop r0
+;move x4 $-4         ;6 [x4]                    x4* _ _ _ 
+    move r0 $-4
+;push                ;6 []                      _ _ _ _ 
+    push
+;push $-4            ;6 []                      _ _ _ _ 
+    push $-4
+;push $-3            ;6 []                      _ _ _ _ 
+    push $-3
+;push r0             ;6 []                      _ _ _ _ 
+    push r0
+;push r1             ;6 []                      _ _ _ _ 
+    push r1
+;push r2             ;6 []                      _ _ _ _ 
+    push r2
+;push r3             ;6 []                      _ _ _ _ 
+    push r3
+;jsr add             ;6 []                      _ _ _ _ 
+    jsr add
+;pop r3              ;6 []                      _ _ _ _ 
+    pop r3
+;pop r2              ;6 []                      _ _ _ _ 
+    pop r2
+;pop r1              ;6 []                      _ _ _ _ 
+    pop r1
+;pop r0              ;6 []                      _ _ _ _ 
+    pop r0
+;pop                 ;7 [x5]                    _ _ _ _ 
+    pop
+;pop                 ;7 [x5]                    _ _ _ _ 
+    pop
+;pop x5              ;7 [x5]                    x5* _ _ _ 
+    pop r0
+;move x5 $-5         ;7 [x5]                    x5* _ _ _ 
+    move r0 $-5
+;sys writer $-1      ;7 []                      _ _ _ _ 
+    sys writer $-1
+;sys writes star     ;7 []                      _ _ _ _ 
+    sys writes star
+;sys writer $-2      ;7 []                      _ _ _ _ 
+    sys writer $-2
+;sys writes plus     ;7 []                      _ _ _ _ 
+    sys writes plus
+;sys writer $-3      ;7 []                      _ _ _ _ 
+    sys writer $-3
+;sys writes equal    ;7 []                      _ _ _ _ 
+    sys writes equal
+;sys writer $-5      ;7 []                      _ _ _ _ 
+    sys writer $-5
+;sys writes eol      ;7 []                      _ _ _ _ 
+    sys writes eol
+;move 0 x6           ;7 []                      x6* _ _ _ 
+    move 0 r0
+;move x6 x7          ;7 [x6]                    x6* x7* _ _ 
+    move r0 r1
+;move x7 $6          ;7 [x7]                    _ x7* _ _ 
+    move r1 $6
+;unlnk               ;7 []                      _ _ _ _ 
+    unlnk
+;ret                 ;7 []                      _ _ _ _ 
+    ret
+;end                 ;7 []                      _ _ _ _ 
+    end
