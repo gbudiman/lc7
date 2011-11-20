@@ -67,7 +67,7 @@ class tinyAssembler {
 					if (ks[1].matches("x[0-9]+")) rUsed.add(ks[1]);
 					//if (isInteger(ks[1]) && rUsed.indexOf(ks[1]) == -1) rUsed.add(ks[1]);
 				}
-				else if ((instruction.get(i).startsWith("pop")
+				/*else if ((instruction.get(i).startsWith("pop")
 								|| instruction.get(i).startsWith("push"))
 								&& ks.length == 2) {
 					if (Integer.parseInt(ks[1].substring(1)) >= registerSize) {
@@ -76,6 +76,11 @@ class tinyAssembler {
 							instruction.set(i, ks[0] + " " + ks[1].replace("r", "x"));
 						}
 					}
+				}*/
+				else if ((instruction.get(i).startsWith("pop")
+								|| instruction.get(i).startsWith("push"))
+								&& ks.length == 2) {
+					if (ks[1].matches("x[0-9]+")) rUsed.add(ks[1]);
 				}
 			}
 			Vector<String> vd = new Vector<String>();
@@ -153,8 +158,14 @@ class tinyAssembler {
 			else if ((ks[0].startsWith("pop") 
 							|| ks[0].startsWith("push"))
 							&& ks.length == 2) {
-				Integer rid = Integer.parseInt(ks[1].substring(1));
+				/*Integer rid = Integer.parseInt(ks[1].substring(1));
 				if (rid >= registerSize) {
+					System.out.println("Ensuring " + ks[1]);
+					tempR.ensure(ks[1], i, instruction, spillRegister, spillAction, false);
+					debugRegAlloc.setElementAt(tempR.clone(), i);
+					regAlloc.setElementAt(tempR.clone(), i);
+				}*/
+				if (ks[1].matches("x[0-9]+")) {
 					tempR.ensure(ks[1], i, instruction, spillRegister, spillAction, false);
 					debugRegAlloc.setElementAt(tempR.clone(), i);
 					regAlloc.setElementAt(tempR.clone(), i);

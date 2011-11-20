@@ -166,7 +166,7 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	c.printOut(1);
 	a.init(masterTable);
 	//List<String> tinyOutput = a.process(flatten(mirList), false);
-	List<String> tinyOutput = a.process(c.getIR(), c.getBB(), false);
+	List<String> tinyOutput = a.process(c.getIR(), c.getBB(), false, flag);
 
 	if (flag != null && flag.equals("-live")) {
 		for (int irw = 0; irw < tinyOutput.size(); irw++) {

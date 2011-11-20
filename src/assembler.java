@@ -78,7 +78,7 @@ class assembler {
 		return assemblerBBIndex;
 	}
 
-	public List<String> process(List<String> irTable, List<Integer> bbIndex, boolean debug) {
+	public List<String> process(List<String> irTable, List<Integer> bbIndex, boolean debug, String flag) {
 		int registerCounter = 0;
 		int i = 0;
 		int irIndex = 0;
@@ -174,10 +174,20 @@ class assembler {
 						contextSwitch(t1);
 					}
 					else if (tiny[0].equals("POP")) {
-						tinyTable.add("pop " + t1);
+						if (flag != null && flag.equals("-live")) {
+							tinyTable.add("pop " + t1.replace("r", "x"));
+						}
+						else {
+							tinyTable.add("pop " + t1);
+						}
 					}
 					else if (tiny[0].equals("PUSH")) {
-						tinyTable.add("push " + t1);
+						if (flag != null && flag.equals("-live")) {
+							tinyTable.add("push " + t1.replace("r", "x"));
+						}
+						else {
+							tinyTable.add("push " + t1);
+						}
 					}
 				break;
 				case 3:
