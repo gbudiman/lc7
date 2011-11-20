@@ -5,9 +5,10 @@ class tinyAssembler {
 	public List<Integer> bbIndex;
 	public Vector<Vector<String>> rxm;
 	public Vector<String> rUsed;
-	public Vector<Vector<Integer>> distantUse;
+	//public Vector<Vector<Integer>> distantUse;
 	public Vector<tinyRegister> regAlloc;
 	public Vector<tinyRegister> debugRegAlloc;
+	public Map<String, String> spillRegister;
 	private int registerSize;
 
 	public tinyAssembler(List<String> _tiny, List<Integer> _bbIndex) {
@@ -21,15 +22,16 @@ class tinyAssembler {
 					+ bbIndex.size());
 		}
 		rxm = new Vector<Vector<String>>();
-		distantUse = new Vector<Vector<Integer>>();
+		//distantUse = new Vector<Vector<Integer>>();
 		regAlloc = new Vector<tinyRegister>();
 		debugRegAlloc = new Vector<tinyRegister>();
 		for (int i = 0; i < instruction.size(); i++) {
 			rxm.add(new Vector<String>());
-			distantUse.add(new Vector<Integer>());
+			//distantUse.add(new Vector<Integer>());
 			regAlloc.add(new tinyRegister(registerSize));
 			debugRegAlloc.add(new tinyRegister(registerSize));
 		}
+		spillRegister = new HashMap<String, String>();
 	}
 
 	public void process() {
@@ -85,14 +87,14 @@ class tinyAssembler {
 	}
 
 	public void preAllocate() {
-		for (int i = 0; i < instruction.size(); i++) {
+		/*for (int i = 0; i < instruction.size(); i++) {
 			Vector<Integer> dul = new Vector<Integer>();	
 			for (int j = 0; j < rxm.get(i).size(); j++) {
 				
 				dul.add(getUseDistance(i, rxm.get(i).get(j).trim()));
 			}
 			distantUse.setElementAt(dul, i);
-		}
+		}*/
 	}
 
 	public void doAllocate() {
@@ -109,17 +111,17 @@ class tinyAssembler {
 
 			String[] ks = instruction.get(i).split("\\s");
 			if (ks[0].startsWith("move")) {
-				if (ks[2].matches("x[0-9]+")) tempR.ensure(ks[2]);
+				if (ks[2].matches("x[0-9]+")) tempR.ensure(ks[2], i, instruction, spillRegister);
 				debugRegAlloc.setElementAt(tempR.clone(), i);
 				if (ks[1].matches("x[0-9]+")) tempR.free(ks[1], rxm.get(i + 1));
 				regAlloc.setElementAt(tempR.clone(), i);
 			}
 			else if (ks[0].startsWith("cmp")) {
 				if (ks[1].matches("x[0-9]+")) {
-					tempR.ensure(ks[1]);
+					tempR.ensure(ks[1], i, instruction, spillRegister);
 				}
 				if (ks[2].matches("x[0-9]+")) {
-					tempR.ensure(ks[2]);
+					tempR.ensure(ks[2], i, instruction, spillRegister);
 				}
 				debugRegAlloc.setElementAt(tempR.clone(), i);
 				if (ks[1].matches("x[0-9]+")) {
@@ -135,10 +137,10 @@ class tinyAssembler {
 				|| ks[0].startsWith("mul")		
 				|| ks[0].startsWith("div")) {
 				if (ks[1].matches("x[0-9]+")) {
-					tempR.ensure(ks[1]);
+					tempR.ensure(ks[1], i, instruction, spillRegister);
 				}
 				if (ks[2].matches("x[0-9]+")) {
-					tempR.ensure(ks[2]);
+					tempR.ensure(ks[2], i, instruction, spillRegister);
 				}
 				debugRegAlloc.setElementAt(tempR.clone(), i);
 				if (ks[1].matches("x[0-9]+")) {
@@ -212,12 +214,12 @@ class tinyAssembler {
 			System.out.print(rxm.get(i).toString());
 			for (int j = 0; j < registerCount; j++) {
 				System.out.print(" ");
-			}
+			}/*
 			System.out.print(distantUse.get(i).toString());
 			finalCount = finalSpace - distantUse.get(i).toString().length();
 			for (int j = 0; j < finalCount; j++) {
 				System.out.print(" ");
-			}
+			}*/
 			//System.out.print(regAlloc.get(i).dataVector.toString());
 			printRegister(i);
 			System.out.println();
@@ -229,7 +231,13 @@ class tinyAssembler {
 		String[] d = instruction.split("\\s");
 		System.out.print("    ");
 		if (d.length >= 2 && d[1].matches("x[0-9]+")) {
-			d[1] = reg.getRegisterLocation(d[1]);
+			//if (reg.getRegisterLocation(d[1]) != null) {
+				d[1] = reg.getRegisterLocation(d[1]);
+			//}
+			//else {
+				/// generate store
+				
+			//}
 		}
 		if (d.length == 3 && d[2].matches("x[0-9]+")) {
 			d[2] = reg.getRegisterLocation(d[2]);

@@ -4,6 +4,7 @@ class tinyRegister {
 	public Vector<String> dataVector = new Vector<String>();
 	public Vector<Boolean> boolVector = new Vector<Boolean>();
 	private int registerSize;
+	private int spillCounter;
 
 	public tinyRegister(int _size) {
 		registerSize = _size;
@@ -20,6 +21,7 @@ class tinyRegister {
 		//@SuppressWarnings("unchecked")
 		_clone.boolVector = (Vector<Boolean>) this.boolVector.clone();
 		_clone.registerSize = (int) this.registerSize;
+		_clone.spillCounter = this.spillCounter;
 
 		return _clone;
 	}
@@ -39,7 +41,7 @@ class tinyRegister {
 		if (is_inRegister(_s)) {
 			return "r" + findInRegister(_s);
 		}
-		return "gError";
+		return null;
 	}
 
 	public boolean is_dirty(String _t) {
@@ -60,23 +62,37 @@ class tinyRegister {
 		return -1;
 	}
 
-	public boolean ensure(String _load) {
+	public String ensure(String _load, int startPoint, List<String> instruction, Map<String, String> spillRegister) {
 		if (is_inRegister(_load)) {
-			return true;
+			return null;
+		}
+		else if (findFree() != -1 && spillRegister.get(_load) != null) {
+			load(findFree(), _load);
+			return spillRegister.get(_load);
 		}
 		else {
-			allocate(_load);
-			return false;
+			return allocate(_load, startPoint, instruction, spillRegister);
 		}
 	}
 
-	private boolean allocate(String _load) {
+	private String allocate(String _load, int startPoint, List<String> instruction, Map<String, String> spillRegister) {
 		int freeReg = -1;
 		if ((freeReg = findFree()) != -1) {
 			load(freeReg, _load);	
-			return true;
+			return null;
 		}
-		return false;
+		else {
+			String spillTarget;
+			int farthestUsedRegister = findFarthest(startPoint, instruction);
+			/*System.out.println(dataVector.get(farthestUsedRegister) 
+												+ " => spill_" + spillCounter);*/
+			spillRegister.put(dataVector.get(farthestUsedRegister)
+											, (spillTarget = "spill_" + spillCounter++));
+			dataVector.setElementAt(null, farthestUsedRegister);
+			boolVector.setElementAt(false, farthestUsedRegister);
+			load(findFree(), _load);
+			return spillTarget;
+		}
 	}
 
 	private void load(int _target, String _load) {
@@ -90,6 +106,34 @@ class tinyRegister {
 			dataVector.setElementAt(null, removalTarget);
 			boolVector.setElementAt(false, removalTarget);
 		}
+	}
+
+	private int findFarthest(int startPoint, List<String> instruction) {
+		int max = -1;
+		int location = -1;
+
+		for (int i = 0; i < dataVector.size(); i++) {
+			for (int j = startPoint + 1; j < instruction.size(); j++) {
+				String[] d = instruction.get(j).split("\\s");
+				if (d.length >= 2 && d[1].equals(dataVector.get(i))) {
+					if (j > max) {
+						max = j;
+						location = i;
+						break;
+					}
+				}
+
+				if (d.length >= 3 && d[2].equals(dataVector.get(i))) {
+					if (j > max) {
+						max = j;
+						location = i;
+						break;
+					}
+				}
+			}
+		}
+
+		return location;
 	}
 
 }
