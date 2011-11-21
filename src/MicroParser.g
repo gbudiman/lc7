@@ -200,7 +200,7 @@ decl 		: (string_decl | var_decl)*;
 string_decl	: 'STRING' id ':=' str ';'
 {
 	symbolTable.add(new mSymbol($id.text, "STRING", $str.text));
-	irTable.add(ir.store($str.text, $id.text, getType($id.text)));
+	irTable.addAll(ir.store($str.text, $id.text, getType($id.text)));
 };
 str		: STRINGLITERAL;
 string_decl_tail: string_decl string_decl_tail?;
@@ -301,7 +301,7 @@ assign_expr returns [List<String> irs]
 	List<String> localIrs = new ArrayList<String>();
 	if (getType($id.text).equals("INT") || getType($id.text).equals("FLOAT")) {
 		//irTable.add(ir.store($expr.temp, $id.text, getType($id.text)));
-		irTable.add(ir.store($expr.temp
+		irTable.addAll(ir.store(findParameter($expr.temp, symbolTable)
 				, findParameter($id.text, symbolTable)
 				, getType($id.text)));
 		//localIrs.add(ir.store($expr.temp, $id.text, getType($id.text)));
@@ -345,7 +345,7 @@ write_stmt returns [List<String> irs]
 return_stmt returns [List<String> irs]	
 		: 'RETURN' expr ';' {
 	$irs = new ArrayList<String>();
-	irTable.add(ir.store(findParameter($expr.temp, symbolTable)
+	irTable.addAll(ir.store(findParameter($expr.temp, symbolTable)
 			, ir.generateReturn()
 			, getType($expr.temp)));	
 	irTable.add("RET");
@@ -467,12 +467,12 @@ primary returns [String temp]
 		| INTLITERAL {
 			$temp = ir.generate();
 			symbolTable.add(new mSymbol($temp, "INT"));
-			irTable.add(ir.store($INTLITERAL.text, $temp, "INT"));
+			irTable.addAll(ir.store($INTLITERAL.text, $temp, "INT"));
 		}
 		| FLOATLITERAL {
 			$temp = ir.generate();
 			symbolTable.add(new mSymbol($temp, "FLOAT"));
-			irTable.add(ir.store($FLOATLITERAL.text, $temp, "FLOAT"));
+			irTable.addAll(ir.store($FLOATLITERAL.text, $temp, "FLOAT"));
 		};
 addop returns [char op]
 		: '+' {$op = '+';} | '-' {$op = '-';};

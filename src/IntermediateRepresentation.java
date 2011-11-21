@@ -1,3 +1,5 @@
+import java.util.*;
+
 class IntermediateRepresentation {
 	public int i = 0;
 	public int j = 0;
@@ -85,18 +87,33 @@ class IntermediateRepresentation {
 		return (opcode + ' ' + a + ' ' + b + ' ' + target);
 	}
 
-	public String store(String a, String result, String type) {
-		if (type.equals("INT")) {
-			return ("STOREI " + a + ' ' + result);
-		}
-		else if (type.equals("FLOAT")) {
-			return ("STOREF " + a + ' ' + result);
-		}
-		else if (type.equals("STRING")) {
-			return ("STORES " + a + ' ' + result);
+	public List<String> store(String a, String result, String type) {
+		List<String> sl = new Vector<String>();
+		if (a.startsWith("$P") && result.startsWith("$L")) {
+			String storeOp = "UNIMPLEMENTED store!";
+			String imd;
+			String res;
+			if (type.equals("INT")) storeOp = "STOREI";
+			else if (type.equals("FLOAT")) storeOp = "STOREF";
+			sl.add(storeOp + " " + a + " " + (imd = generateTemp()));
+			sl.add(storeOp + " " + imd + " " + result);
+			return sl;
 		}
 
-		return "Unimplemented datatype at store: " + type;
+		if (type.equals("INT")) {
+			sl.add("STOREI " + a + ' ' + result);
+		}
+		else if (type.equals("FLOAT")) {
+			sl.add("STOREF " + a + ' ' + result);
+		}
+		else if (type.equals("STRING")) {
+			sl.add("STORES " + a + ' ' + result);
+		}
+		else {
+			sl.add("Unimplemented datatype at store: " + type);
+		}
+
+		return sl;
 	}
 
 	public String rw(String result, String action, String type) {
