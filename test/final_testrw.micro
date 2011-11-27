@@ -1,0 +1,23 @@
+PROGRAM testrw
+BEGIN
+	INT a,b,c;
+	STRING eol := "\n";
+	FLOAT x,y;
+    
+        --PROTO VOID main();
+
+	FUNCTION VOID main()
+	BEGIN
+		a := 1;
+		b := 2;
+		c := 10;
+
+		WRITE (a,eol);
+		WRITE (b,eol);
+		WRITE (c,eol);
+		READ (x,y);
+		WRITE (x,eol);
+		WRITE (y,eol);
+	END	
+END
+

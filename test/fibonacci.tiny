@@ -1,90 +1,264 @@
 ;> 0  {LEADER} MAKESPACE 0
+;         | {PRED: 
+;         | {SUCC: MAKEPARAM 0; }
 ;> 0     MAKEPARAM 0
+;         | {PRED: MAKESPACE 0; 
+;         | {SUCC: STORES "Please input an integer number: " input; }
 ;> 0     STORES "Please input an integer number: " input
+;         | {PRED: MAKEPARAM 0; 
+;         | {SUCC: STORES "f>" fcl; }
 ;> 0     STORES "f>" fcl
+;         | {PRED: STORES "Please input an integer number: " input; 
+;         | {SUCC: STORES " " space; }
 ;> 0     STORES " " space
+;         | {PRED: STORES "f>" fcl; 
+;         | {SUCC: STORES "\n" eol; }
 ;> 0     STORES "\n" eol
+;         | {PRED: STORES " " space; 
+;         | {SUCC: MAKESPACE 2; }
 ;> 0     MAKESPACE 2
+;         | {PRED: STORES "\n" eol; 
+;         | {SUCC: MAKEPARAM 1; }
 ;> 0     MAKEPARAM 1
+;         | {PRED: MAKESPACE 2; 
+;         | {SUCC: ;Generating code for function F; }
 ;> 0     ;Generating code for function F
+;         | {PRED: MAKEPARAM 1; 
+;         | {SUCC: }
 ;> 1  {LEADER} LABEL F
+;         | {PRED: JSR F; JSR F; JSR F; 
+;         | {SUCC: LINK; }
 ;> 1     LINK
+;         | {PRED: LABEL F; 
+;         | {SUCC: STOREI 2 $T0; }
 ;> 1     STOREI 2 $T0
+;         | {PRED: LINK; 
+;         | {SUCC: LEQ $P0 $T0 LABEL1; }
 ;> 1     LEQ $P0 $T0 LABEL1
+;         | {PRED: STOREI 2 $T0; 
+;         | {SUCC: LABEL LABEL1; STOREI 1 $T1; }
 ;> 2  {LEADER} STOREI 1 $T1
+;         | {PRED: LEQ $P0 $T0 LABEL1; 
+;         | {SUCC: SUBI $P0 $T1 $T2; }
 ;> 2     SUBI $P0 $T1 $T2
+;         | {PRED: STOREI 1 $T1; 
+;         | {SUCC: PUSH; }
 ;> 2     PUSH
+;         | {PRED: SUBI $P0 $T1 $T2; 
+;         | {SUCC: PUSH $T2; }
 ;> 2     PUSH $T2
+;         | {PRED: PUSH; 
+;         | {SUCC: JSR F; }
 ;> 2     JSR F
+;         | {PRED: PUSH $T2; 
+;         | {SUCC: LABEL F; }
 ;> 3  {LEADER} POP
+;         | {PRED: 
+;         | {SUCC: POP $T3; }
 ;> 3     POP $T3
+;         | {PRED: POP; 
+;         | {SUCC: STOREI $T3 $L0; }
 ;> 3     STOREI $T3 $L0
+;         | {PRED: POP $T3; 
+;         | {SUCC: STOREI 2 $T4; }
 ;> 3     STOREI 2 $T4
+;         | {PRED: STOREI $T3 $L0; 
+;         | {SUCC: SUBI $P0 $T4 $T5; }
 ;> 3     SUBI $P0 $T4 $T5
+;         | {PRED: STOREI 2 $T4; 
+;         | {SUCC: PUSH; }
 ;> 3     PUSH
+;         | {PRED: SUBI $P0 $T4 $T5; 
+;         | {SUCC: PUSH $T5; }
 ;> 3     PUSH $T5
+;         | {PRED: PUSH; 
+;         | {SUCC: JSR F; }
 ;> 3     JSR F
+;         | {PRED: PUSH $T5; 
+;         | {SUCC: LABEL F; }
 ;> 4  {LEADER} POP
+;         | {PRED: 
+;         | {SUCC: POP $T6; }
 ;> 4     POP $T6
+;         | {PRED: POP; 
+;         | {SUCC: STOREI $T6 $L1; }
 ;> 4     STOREI $T6 $L1
+;         | {PRED: POP $T6; 
+;         | {SUCC: ADDI $L0 $L1 $T7; }
 ;> 4     ADDI $L0 $L1 $T7
+;         | {PRED: STOREI $T6 $L1; 
+;         | {SUCC: STOREI $T7 $R; }
 ;> 4     STOREI $T7 $R
+;         | {PRED: ADDI $L0 $L1 $T7; 
+;         | {SUCC: RET; }
 ;> 4     RET
+;         | {PRED: STOREI $T7 $R; 
+;         | {SUCC: }
 ;> 5  {LEADER} JUMP LABEL0
+;         | {PRED: 
+;         | {SUCC: LABEL LABEL0; }
 ;> 6  {LEADER} LABEL LABEL1
+;         | {PRED: LEQ $P0 $T0 LABEL1; 
+;         | {SUCC: STOREI 0 $T8; }
 ;> 6     STOREI 0 $T8
+;         | {PRED: LABEL LABEL1; 
+;         | {SUCC: NE $P0 $T8 LABEL3; }
 ;> 6     NE $P0 $T8 LABEL3
+;         | {PRED: STOREI 0 $T8; 
+;         | {SUCC: LABEL LABEL3; STOREI 0 $T9; }
 ;> 7  {LEADER} STOREI 0 $T9
+;         | {PRED: NE $P0 $T8 LABEL3; 
+;         | {SUCC: STOREI $T9 $R; }
 ;> 7     STOREI $T9 $R
+;         | {PRED: STOREI 0 $T9; 
+;         | {SUCC: RET; }
 ;> 7     RET
+;         | {PRED: STOREI $T9 $R; 
+;         | {SUCC: }
 ;> 8  {LEADER} JUMP LABEL2
+;         | {PRED: 
+;         | {SUCC: LABEL LABEL2; }
 ;> 9  {LEADER} LABEL LABEL3
+;         | {PRED: NE $P0 $T8 LABEL3; 
+;         | {SUCC: STOREI 1 $T10; }
 ;> 9     STOREI 1 $T10
+;         | {PRED: LABEL LABEL3; 
+;         | {SUCC: NE $P0 $T10 LABEL5; }
 ;> 9     NE $P0 $T10 LABEL5
+;         | {PRED: STOREI 1 $T10; 
+;         | {SUCC: LABEL LABEL5; STOREI 1 $T11; }
 ;> 10  {LEADER} STOREI 1 $T11
+;         | {PRED: NE $P0 $T10 LABEL5; 
+;         | {SUCC: STOREI $T11 $R; }
 ;> 10     STOREI $T11 $R
+;         | {PRED: STOREI 1 $T11; 
+;         | {SUCC: RET; }
 ;> 10     RET
+;         | {PRED: STOREI $T11 $R; 
+;         | {SUCC: }
 ;> 11  {LEADER} JUMP LABEL4
+;         | {PRED: 
+;         | {SUCC: LABEL LABEL4; }
 ;> 12  {LEADER} LABEL LABEL5
+;         | {PRED: NE $P0 $T10 LABEL5; 
+;         | {SUCC: STOREI 2 $T12; }
 ;> 12     STOREI 2 $T12
+;         | {PRED: LABEL LABEL5; 
+;         | {SUCC: NE $P0 $T12 LABEL7; }
 ;> 12     NE $P0 $T12 LABEL7
+;         | {PRED: STOREI 2 $T12; 
+;         | {SUCC: LABEL LABEL7; STOREI 1 $T13; }
 ;> 13  {LEADER} STOREI 1 $T13
+;         | {PRED: NE $P0 $T12 LABEL7; 
+;         | {SUCC: STOREI $T13 $R; }
 ;> 13     STOREI $T13 $R
+;         | {PRED: STOREI 1 $T13; 
+;         | {SUCC: RET; }
 ;> 13     RET
+;         | {PRED: STOREI $T13 $R; 
+;         | {SUCC: }
 ;> 14  {LEADER} LABEL LABEL7
+;         | {PRED: NE $P0 $T12 LABEL7; 
+;         | {SUCC: LABEL LABEL6; }
 ;> 14     LABEL LABEL6
+;         | {PRED: LABEL LABEL7; 
+;         | {SUCC: LABEL LABEL4; }
 ;> 15  {LEADER} LABEL LABEL4
+;         | {PRED: JUMP LABEL4; LABEL LABEL6; 
+;         | {SUCC: LABEL LABEL2; }
 ;> 16  {LEADER} LABEL LABEL2
+;         | {PRED: JUMP LABEL2; LABEL LABEL4; 
+;         | {SUCC: LABEL LABEL0; }
 ;> 17  {LEADER} LABEL LABEL0
+;         | {PRED: JUMP LABEL0; LABEL LABEL2; 
+;         | {SUCC: MAKESPACE 3; }
 ;> 17     MAKESPACE 3
+;         | {PRED: LABEL LABEL0; 
+;         | {SUCC: MAKEPARAM 0; }
 ;> 17     MAKEPARAM 0
+;         | {PRED: MAKESPACE 3; 
+;         | {SUCC: ;Generating code for function main; }
 ;> 17     ;Generating code for function main
+;         | {PRED: MAKEPARAM 0; 
+;         | {SUCC: }
 ;> 18  {LEADER} LABEL main
+;         | {PRED: 
+;         | {SUCC: LINK; }
 ;> 18     LINK
+;         | {PRED: LABEL main; 
+;         | {SUCC: STOREI 0 $T14; }
 ;> 18     STOREI 0 $T14
+;         | {PRED: LINK; 
+;         | {SUCC: STOREI $T14 $L0; }
 ;> 18     STOREI $T14 $L0
+;         | {PRED: STOREI 0 $T14; 
+;         | {SUCC: WRITES input; }
 ;> 18     WRITES input
+;         | {PRED: STOREI $T14 $L0; 
+;         | {SUCC: READI $L1; }
 ;> 18     READI $L1
+;         | {PRED: WRITES input; 
+;         | {SUCC: LABEL LABEL8; }
 ;> 19  {LEADER} LABEL LABEL8
+;         | {PRED: READI $L1; JUMP LABEL8; 
+;         | {SUCC: PUSH; }
 ;> 19     PUSH
+;         | {PRED: LABEL LABEL8; 
+;         | {SUCC: PUSH $L0; }
 ;> 19     PUSH $L0
+;         | {PRED: PUSH; 
+;         | {SUCC: JSR F; }
 ;> 19     JSR F
+;         | {PRED: PUSH $L0; 
+;         | {SUCC: LABEL F; }
 ;> 20  {LEADER} POP
+;         | {PRED: 
+;         | {SUCC: POP $T15; }
 ;> 20     POP $T15
+;         | {PRED: POP; 
+;         | {SUCC: STOREI $T15 $L2; }
 ;> 20     STOREI $T15 $L2
+;         | {PRED: POP $T15; 
+;         | {SUCC: WRITEI $L0; }
 ;> 20     WRITEI $L0
+;         | {PRED: STOREI $T15 $L2; 
+;         | {SUCC: WRITES space; }
 ;> 20     WRITES space
+;         | {PRED: WRITEI $L0; 
+;         | {SUCC: WRITEI $L2; }
 ;> 20     WRITEI $L2
+;         | {PRED: WRITES space; 
+;         | {SUCC: WRITES eol; }
 ;> 20     WRITES eol
+;         | {PRED: WRITEI $L2; 
+;         | {SUCC: STOREI 1 $T16; }
 ;> 20     STOREI 1 $T16
+;         | {PRED: WRITES eol; 
+;         | {SUCC: ADDI $L0 $T16 $T17; }
 ;> 20     ADDI $L0 $T16 $T17
+;         | {PRED: STOREI 1 $T16; 
+;         | {SUCC: STOREI $T17 $L0; }
 ;> 20     STOREI $T17 $L0
+;         | {PRED: ADDI $L0 $T16 $T17; 
+;         | {SUCC: GEQ $L0 $L1 LABEL10; }
 ;> 20     GEQ $L0 $L1 LABEL10
+;         | {PRED: STOREI $T17 $L0; 
+;         | {SUCC: LABEL LABEL10; JUMP LABEL8; }
 ;> 21  {LEADER} JUMP LABEL8
+;         | {PRED: GEQ $L0 $L1 LABEL10; 
+;         | {SUCC: LABEL LABEL8; }
 ;> 22  {LEADER} LABEL LABEL10
+;         | {PRED: GEQ $L0 $L1 LABEL10; 
+;         | {SUCC: STOREI 0 $T18; }
 ;> 22     STOREI 0 $T18
+;         | {PRED: LABEL LABEL10; 
+;         | {SUCC: STOREI $T18 $R; }
 ;> 22     STOREI $T18 $R
+;         | {PRED: STOREI 0 $T18; 
+;         | {SUCC: RET; }
 ;> 22     RET
+;         | {PRED: STOREI $T18 $R; 
+;         | {SUCC: }
 ;str input "Please input an integer number: ";0 []                      _ _ _ _ 
     str input "Please input an integer number: "
 ;str fcl "f>"        ;0 []                      _ _ _ _ 

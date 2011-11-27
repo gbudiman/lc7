@@ -1,0 +1,29 @@
+PROGRAM test
+BEGIN
+	STRING eol := "\n";
+	INT i,a,num;
+	
+        --PROTO VOID main();
+
+	FUNCTION VOID main()
+	BEGIN
+		num := 10;
+		num := 7;
+		i := 2;	
+		a := 42;
+	
+		IF (i<5)
+		THEN
+			num := num +a;
+			IF ( i < 3)
+			THEN 
+				num := num + a;
+			ENDIF
+		ELSE
+			num := num - a;
+		ENDIF
+
+		WRITE(num,eol);
+	END
+END
+

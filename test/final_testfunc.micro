@@ -1,0 +1,30 @@
+PROGRAM testfunc
+BEGIN
+	STRING eol := "\n";
+	
+	--PROTO FLOAT printf (FLOAT a, FLOAT b, FLOAT c);
+	--PROTO INT main  ();
+	
+	FUNCTION FLOAT printf (FLOAT a, FLOAT b, FLOAT c)
+	BEGIN
+	  FLOAT result;
+		WRITE (a,eol);
+		WRITE (c,eol);
+		result := b;
+		RETURN result;
+	END
+
+	
+	FUNCTION INT main ()
+	BEGIN
+		FLOAT a,b,c;
+		FLOAT result;
+		a := 4.4;
+		b := 5.5;
+		c := 6.6;
+		result := printf (a,b,c);
+		WRITE(result,eol);
+		RETURN 0;
+	END
+END
+
