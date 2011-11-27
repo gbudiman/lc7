@@ -163,7 +163,12 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	}
 
 	c.process();
-	c.printOut(1);
+	if (flag != null && flag.equals("-live")) {
+		c.printOut(2);
+	}
+	else {
+		c.printOut(1);
+	}
 	a.init(masterTable);
 	//List<String> tinyOutput = a.process(flatten(mirList), false);
 	List<String> tinyOutput = a.process(c.getIR(), c.getBB(), false, flag);

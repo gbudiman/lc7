@@ -8,7 +8,7 @@
 	#	more test/output/test"$i".parser;
 	#done
 #else
-	#java -cp lib/antlr.jar:classes Micro test/$1".micro"
+	java -cp lib/antlr.jar:classes Micro test/$1".micro"
 	java -cp lib/antlr.jar:classes Micro test/$1".micro" -live
 	#more test/$1".micro"
 	#more test/test.out

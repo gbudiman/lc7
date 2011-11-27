@@ -44,12 +44,12 @@ class cfg {
 
 			if (verbosity > 1) {
 				//System.out.print(" | {PRED: ");
-				System.out.print("\n         | {PRED: ");
+				System.out.print("\n;         | {PRED: ");
 				for (int j = 0; j < predecessor.get(i).size(); j++) {
 					System.out.print(predecessor.get(i).get(j) + "; ");
 				}
 				//System.out.print("}{SUCC: ");
-				System.out.print("\n         | {SUCC: ");
+				System.out.print("\n;         | {SUCC: ");
 				for (int j = 0; j < successor.get(i).size(); j++) {
 					System.out.print(successor.get(i).get(j) + "; ");
 				}
