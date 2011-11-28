@@ -3,8 +3,10 @@ import java.util.*;
 class tinyAssembler {
 	public List<String> instruction;
 	public List<Integer> bbIndex;
+	public List<Integer> scopeIndex;
 	public Vector<Vector<String>> rxm;
 	public Vector<String> rUsed;
+	public Vector<String> persistentUse;
 	//public Vector<Vector<Integer>> distantUse;
 	public Vector<tinyRegister> regAlloc;
 	public Vector<tinyRegister> debugRegAlloc;
@@ -12,9 +14,11 @@ class tinyAssembler {
 	public Map<Integer, String> spillAction;
 	private int registerSize;
 
-	public tinyAssembler(List<String> _tiny, List<Integer> _bbIndex) {
+	public tinyAssembler(List<String> _tiny, List<Integer> _bbIndex, List<Integer> _scopeIndex) {
 		instruction = _tiny;
 		bbIndex = _bbIndex;
+		scopeIndex = _scopeIndex;
+		persistentUse = new Vector<String>();
 		registerSize = 4;
 		if (instruction.size() != bbIndex.size()) {
 			System.out.println("WARNING: instruction : " 
@@ -38,6 +42,7 @@ class tinyAssembler {
 
 	public void process() {
 		int indexLatch = -1;
+		int scopeLatch = -1;
 		int jx = 0;
 		rUsed = new Vector<String>();
 		for (int i = instruction.size() - 1; i >= 0; i--) {
@@ -81,11 +86,14 @@ class tinyAssembler {
 								|| instruction.get(i).startsWith("push"))
 								&& ks.length == 2) {
 					if (ks[1].matches("x[0-9]+")) rUsed.add(ks[1]);
+					//if (ks[0].equals("pop") && ks[1].matches("x[0-9]+")) persistentUse.add(ks[1]);
 				}
 			}
 			Vector<String> vd = new Vector<String>();
 			for (int ci = 0; ci < rUsed.size(); ci++) {
-				vd.add(rUsed.get(ci));
+				if (!vd.contains(rUsed.get(ci))) {
+					vd.add(rUsed.get(ci));
+				}
 			}
 			rxm.setElementAt(vd, i);
 		}
@@ -104,20 +112,37 @@ class tinyAssembler {
 	public void doAllocate() {
 		tinyRegister tempR = new tinyRegister(registerSize);
 		int indexLatch = -1;
+		int scopeLatch = -1;
 		for (int i = 0; i < instruction.size(); i++) {
 			if (i > 0) {
 				tempR = regAlloc.get(i-1);
 			}
+			//System.out.println(";processing: " + instruction.get(i) + " " + tempR.dataVector.toString());
 			if (indexLatch != bbIndex.get(i)) {
 				indexLatch = bbIndex.get(i);
-				tempR = new tinyRegister(registerSize);
+				if (scopeLatch == scopeIndex.get(i)) {
+					for (int pi = 0; pi < registerSize; pi++) {
+						if (!persistentUse.contains(tempR.dataVector.get(pi))) {
+							tempR.dataVector.set(pi, null);
+							tempR.boolVector.set(pi, false);
+						}
+					}
+				}	
+				else {
+					tempR = new tinyRegister(registerSize);
+				}
+			}
+			if (scopeLatch != scopeIndex.get(i)) {
+				scopeLatch = scopeIndex.get(i);
+				persistentUse = new Vector<String>();
 			}
 
+			//System.out.println("--> start " + tempR.dataVector.toString());
 			String[] ks = instruction.get(i).split("\\s");
 			if (ks[0].startsWith("move")) {
 				if (ks[2].matches("x[0-9]+")) tempR.ensure(ks[2], i, instruction, spillRegister, spillAction, false);
 				debugRegAlloc.setElementAt(tempR.clone(), i);
-				if (ks[1].matches("x[0-9]+")) tempR.free(ks[1], rxm.get(i + 1));
+				if (ks[1].matches("x[0-9]+")) tempR.free(ks[1], rxm.get(i + 1), persistentUse);
 				regAlloc.setElementAt(tempR.clone(), i);
 			}
 			else if (ks[0].startsWith("cmp")) {
@@ -129,10 +154,10 @@ class tinyAssembler {
 				}
 				debugRegAlloc.setElementAt(tempR.clone(), i);
 				if (ks[1].matches("x[0-9]+")) {
-					tempR.free(ks[1], rxm.get(i + 1));
+					tempR.free(ks[1], rxm.get(i + 1), persistentUse);
 				}
 				if (ks[2].matches("x[0-9]+")) {
-					tempR.free(ks[2], rxm.get(i + 1));
+					tempR.free(ks[2], rxm.get(i + 1), persistentUse);
 				}
 				regAlloc.setElementAt(tempR.clone(), i);
 			}
@@ -148,10 +173,10 @@ class tinyAssembler {
 				}
 				debugRegAlloc.setElementAt(tempR.clone(), i);
 				if (ks[1].matches("x[0-9]+")) {
-					tempR.free(ks[1], rxm.get(i + 1));
+					tempR.free(ks[1], rxm.get(i + 1), persistentUse);
 				}
 				if (ks[2].matches("x[0-9]+")) {
-					tempR.free(ks[2], rxm.get(i + 1));
+					tempR.free(ks[2], rxm.get(i + 1), persistentUse);
 				}
 				regAlloc.setElementAt(tempR.clone(), i);
 			}
@@ -167,14 +192,23 @@ class tinyAssembler {
 				}*/
 				if (ks[1].matches("x[0-9]+")) {
 					tempR.ensure(ks[1], i, instruction, spillRegister, spillAction, false);
-					debugRegAlloc.setElementAt(tempR.clone(), i);
-					regAlloc.setElementAt(tempR.clone(), i);
+					//debugRegAlloc.setElementAt(tempR.clone(), i);
+					//regAlloc.setElementAt(tempR.clone(), i);
+					if (ks[0].equals("pop")) {
+						persistentUse.add(ks[1]);
+						//System.out.println("adding " + ks[1] + " as persistent at " + instruction.get(i) + " (" + i + ")");
+					}
+				
 				}
+				debugRegAlloc.setElementAt(tempR.clone(), i);
+				regAlloc.setElementAt(tempR.clone(), i);
 			}
 			else {
+				debugRegAlloc.setElementAt(tempR.clone(), i);
 				regAlloc.setElementAt(tempR.clone(), i);
 			}
 
+			//System.out.println("after " + instruction.get(i) + " reg = " + tempR.dataVector.toString());
 			//regAlloc.setElementAt(tempR.clone(), i);
 		}
 	}
@@ -233,7 +267,7 @@ class tinyAssembler {
 				System.out.print(" ");
 			}
 			registerCount = analysisSpace - rxm.get(i).toString().length();
-			System.out.print(";" + bbIndex.get(i) + " ");
+			System.out.print(";" + bbIndex.get(i) + "/" + scopeIndex.get(i) + " ");
 			System.out.print(rxm.get(i).toString());
 			for (int j = 0; j < registerCount; j++) {
 				System.out.print(" ");

@@ -171,7 +171,7 @@ program 	: 'PROGRAM' id 'BEGIN' {
 	}
 	a.init(masterTable);
 	//List<String> tinyOutput = a.process(flatten(mirList), false);
-	List<String> tinyOutput = a.process(c.getIR(), c.getBB(), false, flag);
+	List<String> tinyOutput = a.process(c.getIR(), c.getBB(), c.getSI(), false, flag);
 
 	if (flag != null && flag.equals("-live")) {
 		for (int irw = 0; irw < tinyOutput.size(); irw++) {
@@ -182,7 +182,7 @@ program 	: 'PROGRAM' id 'BEGIN' {
 				tinyOutput.set(irw, (String) (tto[0] + " " + tto[1] + " " + tto[2]));
 			}
 		}
-		tinyAssembler fo = new tinyAssembler(tinyOutput, a.getBB());
+		tinyAssembler fo = new tinyAssembler(tinyOutput, a.getBB(), a.getSI());
 		fo.process();
 		fo.printOut(0);
 	}

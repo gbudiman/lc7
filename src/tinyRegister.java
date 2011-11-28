@@ -93,6 +93,7 @@ class tinyRegister {
 			int farthestUsedRegister = findFarthest(startPoint, instruction);
 			/*System.out.println(dataVector.get(farthestUsedRegister) 
 												+ " => spill_" + spillCounter);*/
+			//System.out.println("Trying to put " + _load + " at " + farthestUsedRegister);
 			spillRegister.put(dataVector.get(farthestUsedRegister)
 											, (spillTarget = "spill_" + spillCounter++));
 			dataVector.setElementAt(null, farthestUsedRegister);
@@ -108,8 +109,10 @@ class tinyRegister {
 		boolVector.setElementAt(true, _target);
 	}
 
-	public void free(String _freeTarget, Vector<String> liveVariable) {
-		if (liveVariable.indexOf(_freeTarget) == -1 && is_inRegister(_freeTarget)) {
+	public void free(String _freeTarget, Vector<String> liveVariable, Vector<String> persistentVariable) {
+		if (persistentVariable.indexOf(_freeTarget) == -1
+			&& liveVariable.indexOf(_freeTarget) == -1 
+			&& is_inRegister(_freeTarget)) {
 			int removalTarget = dataVector.indexOf(_freeTarget);
 			dataVector.setElementAt(null, removalTarget);
 			boolVector.setElementAt(false, removalTarget);
@@ -118,10 +121,12 @@ class tinyRegister {
 
 	private int findFarthest(int startPoint, List<String> instruction) {
 		int max = -1;
-		int location = -1;
+		int location = 0;
+		int j;
 
 		for (int i = 0; i < dataVector.size(); i++) {
-			for (int j = startPoint + 1; j < instruction.size(); j++) {
+			//System.out.println(">Analyzing " + i);
+			for (j = startPoint + 1; j < instruction.size(); j++) {
 				String[] d = instruction.get(j).split("\\s");
 				if (d.length >= 2 && d[1].equals(dataVector.get(i))) {
 					if (j > max) {
@@ -131,7 +136,7 @@ class tinyRegister {
 					}
 				}
 
-				if (d.length >= 3 && d[2].equals(dataVector.get(i))) {
+				else if (d.length >= 3 && d[2].equals(dataVector.get(i))) {
 					if (j > max) {
 						max = j;
 						location = i;
@@ -139,6 +144,7 @@ class tinyRegister {
 					}
 				}
 			}
+			//System.out.println("not found at " + j + "/" + instruction.size());
 		}
 
 		return location;

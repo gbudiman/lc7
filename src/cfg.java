@@ -7,6 +7,7 @@ class cfg {
 	public Vector<Vector<String>> successor = new Vector<Vector<String>>();
 	public Vector<Vector<Integer>> sid = new Vector<Vector<Integer>>();
 	public List<Integer> bbIndex = new Vector<Integer>();
+	public List<Integer> scopeIndex = new Vector<Integer>();
 	public List<Boolean> isLeader = new Vector<Boolean>();
 
 	public cfg() {
@@ -19,6 +20,7 @@ class cfg {
 		successor.add(new Vector<String>());
 		sid.add(new Vector<Integer>());
 		bbIndex.add(null);
+		scopeIndex.add(null);
 		isLeader.add(false);
 	}
 
@@ -43,6 +45,7 @@ class cfg {
 			System.out.print(instruction.get(i));
 
 			if (verbosity > 1) {
+				System.out.print("   [SC: " + scopeIndex.get(i) + "]");
 				//System.out.print(" | {PRED: ");
 				System.out.print("\n;         | {PRED: ");
 				for (int j = 0; j < predecessor.get(i).size(); j++) {
@@ -65,6 +68,10 @@ class cfg {
 
 	public List<Integer> getBB() {
 		return bbIndex;
+	}
+
+	public List<Integer> getSI() {
+		return scopeIndex;
 	}
 
 	public void process() {
@@ -131,13 +138,31 @@ class cfg {
 	public void assignBBIndex() {
 		int index = 0;
 		int i = 0;
+		int si = 0;
+		String labelLatch = "nolabel";
 		for (i = 0; i < instruction.size() - 1; i++) {
 			bbIndex.set(i, index);
 			if (isLeader.get(i+1)) {
 				index++;
 			}
+
+			if (instruction.get(i).startsWith("LABEL")) {
+				String[] div = instruction.get(i).split("\\s");
+				if (div[1].startsWith("LABEL")) {
+					// do nothing
+				}
+				else {
+					if (!div[1].equals(labelLatch)) {
+						labelLatch = div[1];
+						si++;
+					}
+				}
+			}
+
+			scopeIndex.set(i, si);
 		}
 		bbIndex.set(i, index);
+		scopeIndex.set(i, si);
 	}
 
 	public boolean isBranch(String _i) {

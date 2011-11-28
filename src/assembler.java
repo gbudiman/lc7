@@ -5,6 +5,7 @@ class assembler {
 	public List<String> varTable;
 	public List<String> localTable;
 	public List<Integer> assemblerBBIndex;
+	public List<Integer> assemblerScopeIndex;
 	public String t1, t2, t3, t4;
 	private boolean use;
 	private int linkCount;
@@ -16,6 +17,7 @@ class assembler {
 		varTable = new Vector<String>();
 		localTable = new Vector<String>();
 		assemblerBBIndex = new Vector<Integer>();
+		assemblerScopeIndex = new Vector<Integer>();
 		use = false;
 	}
 
@@ -39,6 +41,7 @@ class assembler {
 						tinyTable.add("var " + sti.getName());
 					}
 					assemblerBBIndex.add(0);
+					assemblerScopeIndex.add(0);
 				}
 				tinyTable.add("push");
 				tinyTable.add("push r0");
@@ -51,6 +54,7 @@ class assembler {
 
 				for (int i = 0; i < 7; i++) {
 					assemblerBBIndex.add(0);
+					assemblerScopeIndex.add(0);
 				}
 			}
 			else { break; }
@@ -78,19 +82,29 @@ class assembler {
 		return assemblerBBIndex;
 	}
 
-	public List<String> process(List<String> irTable, List<Integer> bbIndex, boolean debug, String flag) {
+	public List<Integer> getSI() {
+		return assemblerScopeIndex;
+	}
+
+	public List<String> process(List<String> irTable, List<Integer> bbIndex, List<Integer> scopeIndex, boolean debug, String flag) {
 		int registerCounter = 0;
 		int i = 0;
 		int irIndex = 0;
 		int currentBB;
+		int currentScope;
 		int previousSize;
 		//List<String> strDeclaration = new LinkedList<String>();
 		if (irTable.size() != bbIndex.size()) {
 			System.out.println(";WARNING! irTable length: " + irTable.size() + " bbIndex length: " + bbIndex.size());
 		}
+		if (bbIndex.size() != scopeIndex.size()) {
+			System.out.println(";WARNING! bbIndex length: " + bbIndex.size() + " scopeIndex length: " + scopeIndex.size());
+		}
 		for (String ir : irTable) {
 			if (debug) { tinyTable.add("----- " + ir); }
-			currentBB = bbIndex.get(irIndex++);
+			currentBB = bbIndex.get(irIndex);
+			currentScope = scopeIndex.get(irIndex);
+			irIndex++;
 			previousSize = tinyTable.size();
 			//System.out.println(previousSize + " : " + ir);
 			if (ir.startsWith("STORES")) {
@@ -485,6 +499,7 @@ class assembler {
 			//System.out.println(previousSize + " -> " + tinyTable.size() + " (" + i + ")");
 			for (int j = previousSize; j < tinyTable.size(); j++) {
 				assemblerBBIndex.add(currentBB);
+				assemblerScopeIndex.add(currentScope);
 			}
 		}
 		//fin();
@@ -494,6 +509,7 @@ class assembler {
 		}*/
 		tinyTable.add("end");
 		assemblerBBIndex.add(assemblerBBIndex.get(assemblerBBIndex.size() - 1));
+		assemblerScopeIndex.add(assemblerScopeIndex.get(assemblerScopeIndex.size() - 1));
 		return tinyTable;
 	}
 }
