@@ -436,7 +436,13 @@ call_expr returns [String temp]
 
 		String tVar;
 		int i;
-		int exprSize = $expr_list.irs.size();
+		int exprSize;
+		if ($expr_list.irs == null) {
+			exprSize = 0;
+		}
+		else {
+			exprSize = $expr_list.irs.size();
+		}
 		irTable.add(ir.push());
 
 		for (i = exprSize; i > 0; i--) {
